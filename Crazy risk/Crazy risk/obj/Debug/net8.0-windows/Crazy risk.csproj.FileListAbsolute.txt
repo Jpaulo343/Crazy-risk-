@@ -1,4 +1,0 @@
-C:\Users\jpaul\OneDrive\Documentos\Documentos tec\semestre 2 - 2025\Estructuras de datos y algoritmos\proyecto 1 - Crazy risk\repositorio Github\Crazy-risk-\Crazy risk\Crazy risk\obj\Debug\net8.0-windows\MainWindow.g.cs
-C:\Users\jpaul\OneDrive\Documentos\Documentos tec\semestre 2 - 2025\Estructuras de datos y algoritmos\proyecto 1 - Crazy risk\repositorio Github\Crazy-risk-\Crazy risk\Crazy risk\obj\Debug\net8.0-windows\App.g.cs
-C:\Users\jpaul\OneDrive\Documentos\Documentos tec\semestre 2 - 2025\Estructuras de datos y algoritmos\proyecto 1 - Crazy risk\repositorio Github\Crazy-risk-\Crazy risk\Crazy risk\obj\Debug\net8.0-windows\Crazy risk_MarkupCompile.cache
-C:\Users\jpaul\OneDrive\Documentos\Documentos tec\semestre 2 - 2025\Estructuras de datos y algoritmos\proyecto 1 - Crazy risk\repositorio Github\Crazy-risk-\Crazy risk\Crazy risk\obj\Debug\net8.0-windows\Crazy risk_MarkupCompile.lref
