@@ -11,13 +11,13 @@ namespace Crazy_risk
 
         internal string Nombre { get;  set; }
         internal int Continente { get; private set; }
-        /*
-        0: norteamerica
-        1: sudamerica
-        2: europa
-        3: asia
-        4: africa
-        5: oceanía
+        /*            
+            0: norteamerica
+            1: sudamerica
+            2: europa
+            3: africa
+            4: asia
+            5: oceanía
         */
 
         internal string Estado { get; set; } // Puede ser conquistado por "x" jugdor o libre
