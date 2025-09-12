@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Crazy_risk
@@ -11,7 +12,7 @@ namespace Crazy_risk
     public class Nodo<T>
     {
         public T Value { get; private set; }
-        public Nodo<T> Next { get; set; }
+        public Nodo<T>? Next { get; set; }
 
         public Nodo(T dato)
         {
@@ -21,8 +22,8 @@ namespace Crazy_risk
     }
     public class ListaEnlazada<T>
     {
-        protected Nodo<T> Head { get; set; }
-        protected Nodo<T> Tail { get; set; }
+        protected Nodo<T>? Head { get; set; }
+        protected Nodo<T>? Tail { get; set; }
 
         protected int size { get; set; }
 
@@ -50,32 +51,48 @@ namespace Crazy_risk
             Nodo<T> actual = Head;
             while (actual != null)
             {
-                if (actual.Value.Equals(dato))
+                if (actual.Value!.Equals(dato))
                 { 
                     return true;
                 }
 
-                actual = actual.Next;
+                actual = actual.Next!;
             }
             return false;
         }
 
+        public IEnumerable<T> Enumerar()
+        {
+            Nodo<T> actual = Head!;
+            while (actual != null)
+            {
+                yield return actual.Value;   
+                actual = actual.Next!;   
+            }
+        }
+
     }
+
+
 
     internal class ListaTerritorios : ListaEnlazada<Territorio> 
     {
         public  Territorio BuscarPorNombre(string nombre)
         {
-            Nodo<Territorio> Temp = this.Head;
-            while (Temp != null) 
-            {   
-                if (Temp.Value.Nombre==nombre)
+            if (Head != null){
+                Nodo<Territorio> Temp = Head!;
+                while (Temp != null)
                 {
-                    return Temp.Value;
+                    if (Temp.Value.Nombre == nombre)
+                    {
+                        return Temp.Value;
+                    }
+                    Temp = Temp.Next!;
                 }
-                Temp = Temp.Next;
             }
-            return null;
+
+            return null!;
+
         }
     }
 

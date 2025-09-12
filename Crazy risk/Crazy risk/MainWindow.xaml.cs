@@ -19,6 +19,9 @@ namespace Crazy_risk
         public MainWindow()
         {
             InitializeComponent();
+            var mapaPage = new Mapa();
+
+            MainFrame.Content = mapaPage;
         }
     }
 }

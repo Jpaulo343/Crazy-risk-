@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Crazy_risk"
         mc:Ignorable="d"
         Title="MainWindow" Height="715" Width="1128">
-
+    
     <Grid>
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
     </Grid>
