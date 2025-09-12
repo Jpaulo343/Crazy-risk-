@@ -7,12 +7,34 @@
       mc:Ignorable="d" 
       Title="Mapa" Height="715" Width="1128">
 
+    <Page.Resources>
+        <Storyboard x:Key="Animacion_Seleccion">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1.0" To="0.5" Duration="0:0:0.5" AutoReverse="True" RepeatBehavior="Forever" />
+        </Storyboard>
+
+        <Style x:Key="TerritoryStyle" TargetType="Path">
+            <Setter Property="Cursor" Value="Hand" />
+                <Style.Triggers>
+                <DataTrigger Binding="{Binding EstaSeleccionado}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard x:Name="Seleccion_Begin" Storyboard="{StaticResource Animacion_Seleccion}" />
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <StopStoryboard BeginStoryboardName="Seleccion_Begin" />
+                    </DataTrigger.ExitActions>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+    </Page.Resources>
+
     <Canvas Margin="10,-2,10,6">
 
 
         <!--  norte america -->
         <Path 
             x:Name="greenland"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Thistle"
             Stroke="Black"
             StrokeThickness="1"
@@ -21,6 +43,8 @@
 
         <Path 
             x:Name="alaska"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Thistle"
             Stroke="Black"  
             StrokeThickness="1"
@@ -29,6 +53,8 @@
 
         <Path 
             x:Name="northwest_territory"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Thistle"
             Stroke="Black"
             StrokeThickness="1"
@@ -36,6 +62,8 @@
             />
         <Path 
             x:Name="alberta"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Thistle"
             Stroke="Black"
             StrokeThickness="1"
@@ -45,6 +73,8 @@
 
         <Path 
             x:Name="ontario"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Thistle"
             Stroke="Black"
             StrokeThickness="1"
@@ -54,6 +84,8 @@
 
         <Path
             x:Name="quebec"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Thistle"
             Stroke="Black"
             StrokeThickness="1"
@@ -62,6 +94,8 @@
 
         <Path 
             x:Name="eastern_united_states"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Thistle"
             Stroke="Black"
             StrokeThickness="1"
@@ -69,6 +103,8 @@
         />
         <Path 
             x:Name="western_united_states"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Thistle"
             Stroke="Black"
             StrokeThickness="1"
@@ -76,6 +112,8 @@
         />
         <Path
             x:Name="central_america"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Thistle"
             Stroke="Black"
             StrokeThickness="1"
@@ -83,6 +121,8 @@
         />
         <Path
             x:Name="venezuela"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Green" 
             Stroke="Black" 
             StrokeThickness="1"
@@ -90,6 +130,8 @@
         />
         <Path
             x:Name="argentina"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Green" 
             Stroke="Black" 
             StrokeThickness="1"
@@ -97,13 +139,17 @@
             />
         <Path
             x:Name="peru"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Green" 
             Stroke="Black" 
             StrokeThickness="1"
             Data="M 347.125,472.5 C 348,472.25 348.125,474.125 347.875,475.125 C 347.625,476.125 348,477.125 349.125,478.25 C 350.25,479.375 351.5,480.625 352,481.5 C 352.5,482.375 353.75,483.125 354,484.125 C 354.25,485.125 354.625,486.125 355.875,487.125 C 357.125,488.125 357.875,487 358.125,486.25 C 358.375,485.5 358,483.75 358.25,482 C 358.5,480.25 360.75,482.25 360.75,482.25 C 360.75,482.25 361.625,484.125 362,484.75 C 362.375,485.375 364,485.125 364.75,484.375 C 365.5,483.625 366,483.75 366.5,483.75 C 367,483.75 368,484.75 369.75,484.5 C 371.5,484.25 371.625,484.125 373.125,485.5 C 374.625,486.875 373.375,487.625 374.75,488.5 C 376.125,489.375 376.125,488.5 377,488.875 C 377.875,489.25 377.375,490.375 378.75,491.25 C 380.125,492.125 383.75,491.375 385,491.875 C 386.25,492.375 385,493.5 385,494.375 C 385,495.25 385,497.625 384.375,497.875 C 383.75,498.125 382.875,499.875 383,501.25 C 383.125,502.625 386.375,501.25 387.75,500.625 C 389.125,500 389.75,500.125 391.125,498.875 C 392.5,497.625 396.25,495.5 396.25,495.5 C 396.125,493.75 393.25,492.75 392.875,490.125 C 392.5,487.5 392.125,485.625 391.5,485.125 C 390.875,484.625 390.25,485.125 389.375,483.75 C 388.5,482.375 387.875,481.875 386.375,481 C 384.875,480.125 385.625,478.75 385.875,477.625 C 386.125,476.5 384.875,473.25 384.125,471.75 C 383.375,470.25 382.5,470.25 382.125,468.5 C 381.75,466.75 381.625,466.25 380.5,465.375 C 379.375,464.5 377.875,464.375 377.625,463.625 C 377.375,462.875 377.875,461.875 377.125,461.125 C 376.375,460.375 375.75,458.625 375.125,457.375 C 374.5,456.125 372.25,457.25 370.625,457.25 C 369,457.25 369,455.125 368,454.5 C 367,453.875 366,454.375 364.875,453.875 C 363.75,453.375 364.25,452.5 362.75,452.375 C 361.25,452.25 361.125,451.125 360.375,449.875 C 359.625,448.625 357.25,447.5 356.25,447.625 C 355.25,447.75 354.875,449 354.375,449.5 C 353.875,450 352,450 350.125,450.375 C 348.25,450.75 345.75,452.625 343,452.75 C 340.25,452.875 340.375,449.875 340.625,448.5 C 340.875,447.125 344.5,446.75 344.75,444.625 C 345,442.5 341.5,444.375 340.125,443.625 C 338.75,442.875 335.25,442.75 335.125,441.75 C 335,440.75 333.75,440.625 332.75,440.625 C 331.75,440.625 330.375,439.375 329.625,438 C 328.875,436.625 330.875,436 331,435 C 331.125,434 333.875,434.375 334.875,433.625 C 335.875,432.875 335.625,429 335.75,428.375 C 335.875,427.75 339.94159,427.79325 339.94159,427.79325 C 339.94159,427.79325 339.14609,425.67193 338.61576,425.1416 C 338.08543,424.61127 337.11316,424.3461 336.40605,424.16933 C 335.69894,423.99255 334.5499,422.75511 333.66601,422.8435 C 332.78213,422.93189 330.48403,422.93189 329.86531,422.22478 C 329.2466,421.51768 328.18594,420.72218 326.59495,420.63379 C 325.00395,420.5454 324.29685,421.69445 323.23619,420.01507 C 322.17553,418.3357 320.23098,416.0376 319.70065,415.94921 C 319.17032,415.86082 316.69545,415.59566 317.375,414.875 C 315.5,416.125 315.625,418.625 314.875,420.5 C 314.125,422.375 313.5,423.125 312.875,425.125 C 312.25,427.125 313.25,426.625 314,428.75 C 314.75,430.875 313.75,429.75 313.375,431 C 313,432.25 313.25,436.25 313.25,436.25 C 313.25,436.25 314.125,438.875 314.625,439.375 C 315.125,439.875 317.125,442.125 317.125,442.125 C 317.125,442.125 316.875,443.75 317.375,445.75 C 317.875,447.75 318.75,447 319.25,448 C 319.75,449 321.75,451.125 322.375,451.625 C 323,452.125 324.375,454.25 325.75,454.75 C 327.125,455.25 326.125,457.125 326,458.125 C 325.875,459.125 327.375,461.375 327.875,462.375 C 328.375,463.375 328.625,462.625 329.125,463.375 C 329.625,464.125 331,465.125 331.875,465.625 C 332.75,466.125 333.625,466.25 333.625,466.25 C 333.625,466.25 334.875,467.375 335.75,468 C 336.625,468.625 337.75,468.875 338.5,469.125 C 339.25,469.375 340.5,472.125 341.125,472.75 C 341.125,472.75 343.875,473.875 344.5,474 C 345.125,474.125 346.25,472.625 347.125,472.5 z"
             />
         <Path
-            x:Name="Brasil"
+            x:Name="brazil"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Green"
             Stroke="Black"
             StrokeThickness="1"
@@ -114,6 +160,8 @@
 
         <Path 
             x:Name="great_britain"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Orange"
             Stroke="Black"
             StrokeThickness="1"
@@ -122,6 +170,8 @@
 
         <Path 
             x:Name="scandinavia"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Orange"
             Stroke="Black"
             StrokeThickness="1"
@@ -130,6 +180,8 @@
 
         <Path 
             x:Name="northern_europe"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Orange"
             Stroke="Black"
             StrokeThickness="1"
@@ -138,6 +190,8 @@
 
         <Path 
             x:Name="southern_europe"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Orange"
             Stroke="Black"
             StrokeThickness="1"
@@ -146,6 +200,8 @@
 
         <Path 
             x:Name="western_europe"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Orange"
             Stroke="Black"
             StrokeThickness="1"
@@ -154,6 +210,8 @@
 
         <Path 
             x:Name="ukraine"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Orange"
             Stroke="Black"
             StrokeThickness="1"
@@ -162,6 +220,8 @@
 
         <Path 
             x:Name="iceland"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Orange"
             Stroke="Black"
             StrokeThickness="1"
@@ -173,6 +233,8 @@
 
         <Path 
             x:Name="north_africa"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Yellow"
             Stroke="Black"
             StrokeThickness="1"
@@ -180,6 +242,8 @@
             />
         <Path 
             x:Name="east_africa"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="yellow"
             Stroke="Black"
             StrokeThickness="1"
@@ -187,6 +251,8 @@
             />
         <Path
             x:Name="egypt"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="yellow"
             Stroke="Black"
             StrokeThickness="1"
@@ -195,6 +261,8 @@
 
         <Path 
             x:Name="congo"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="yellow"
             Stroke="Black"
             StrokeThickness="1"
@@ -203,6 +271,8 @@
 
         <Path 
             x:Name="south_africa"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="yellow"
             Stroke="Black"
             StrokeThickness="1"
@@ -211,6 +281,8 @@
 
         <Path 
             x:Name="madagascar"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="yellow"
             Stroke="Black"
             StrokeThickness="1"
@@ -220,7 +292,9 @@
 
         <!-- Asia -->
         <Path
-            x:Name="Mongolia"
+            x:Name="mongolia"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -228,6 +302,8 @@
         />
         <Path 
             x:Name="middle_east"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -236,6 +312,8 @@
 
         <Path 
             x:Name="irkutsk"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -244,6 +322,8 @@
 
         <Path 
             x:Name="china"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -252,6 +332,8 @@
 
         <Path 
             x:Name="siberia"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -260,6 +342,8 @@
 
         <Path 
             x:Name="ural"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -268,6 +352,8 @@
 
         <Path 
             x:Name="afghanistan"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -276,6 +362,8 @@
 
         <Path 
             x:Name="siam"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -284,6 +372,8 @@
 
         <Path 
             x:Name="india"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -292,6 +382,8 @@
 
         <Path 
             x:Name="kamchatka"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -299,7 +391,9 @@
             />
 
         <Path 
-            x:Name="yakursk"
+            x:Name="yakutsk"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -308,6 +402,8 @@
 
         <Path 
             x:Name="japan"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Red"
             Stroke="Black"
             StrokeThickness="1"
@@ -319,6 +415,8 @@
         <!-- Oceanía -->
         <Path 
             x:Name="eastern_australia" 
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Blue" 
             Stroke="Black" 
             StrokeThickness="1"
@@ -327,6 +425,8 @@
 
         <Path 
             x:Name="indonesia"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Blue" 
             Stroke="Black" 
             StrokeThickness="1"
@@ -334,6 +434,8 @@
         />
         <Path
             x:Name="western_australia"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Blue" 
             Stroke="Black" 
             StrokeThickness="1"
@@ -342,6 +444,8 @@
 
         <Path 
             x:Name="new_guinea"
+            Style="{StaticResource TerritoryStyle}"
+            MouseLeftButtonDown="Territorio_ClickIzquierdo"
             Fill="Blue"
             Stroke="Black"
             StrokeThickness="1"

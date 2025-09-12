@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using System.Text.Json;
 
 namespace Crazy_risk
 {
@@ -23,6 +25,55 @@ namespace Crazy_risk
         public Mapa()
         {
             InitializeComponent();
+            cargarDatosTerritorios();
+
+        }
+
+        private void Territorio_ClickIzquierdo(object sender, MouseButtonEventArgs e)
+        {
+            
+            var pathClickeado = sender as System.Windows.Shapes.Path;
+
+            if (pathClickeado != null)
+            {
+                var territorioClickeado = pathClickeado.DataContext as Territorio;
+
+                if (territorioClickeado != null)
+                {
+                    territorioClickeado.EstaSeleccionado = !territorioClickeado.EstaSeleccionado; //cuando se cree el objeto de Juego debe cambiarse
+                }
+            }
+        
+        }
+
+        internal void cargarDatosTerritorios()
+        {
+            string json = File.ReadAllText("DatosTerritorios.json");
+            var territoriosJson = JsonSerializer.Deserialize<List<TerritorioJson>>(json);
+
+            ListaEnlazada<Territorio> territorios = new();
+
+            foreach (var t in territoriosJson)
+            {
+                var listaAdyacentes = new ListaEnlazada<string>();
+                foreach (var nombreAdj in t.Adyacentes)
+                {
+                    listaAdyacentes.añadir(nombreAdj);
+                }
+
+                Territorio territorio = new Territorio(t.Nombre, t.Estado, listaAdyacentes, t.Tropas, t.Continente);
+                territorios.añadir(territorio);
+            }
+
+            foreach (var t in territorios.Enumerar()) 
+            {
+                System.Windows.Shapes.Path pathObjeto = this.FindName(t.Nombre) as System.Windows.Shapes.Path;
+                if (pathObjeto != null)
+                {
+                    pathObjeto.DataContext = t;
+
+                }
+            }
         }
     }
 }
