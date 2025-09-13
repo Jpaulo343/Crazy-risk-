@@ -58,11 +58,11 @@ namespace Crazy_risk
                 var listaAdyacentes = new ListaEnlazada<string>();
                 foreach (var nombreAdj in t.Adyacentes)
                 {
-                    listaAdyacentes.añadir(nombreAdj);
+                    listaAdyacentes.Añadir(nombreAdj);
                 }
 
                 Territorio territorio = new Territorio(t.Nombre, t.Estado, listaAdyacentes, t.Tropas, t.Continente);
-                territorios.añadir(territorio);
+                territorios.Añadir(territorio);
             }
 
             foreach (var t in territorios.Enumerar()) 

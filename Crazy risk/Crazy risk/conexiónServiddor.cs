@@ -1,3 +1,7 @@
+/*
+
+Este archivo debe cambiarse a un objeto y al formato del proyecto, d elo contrario no funcionará
+
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -65,3 +69,4 @@ static async Task RunClientAsync(string host, int port) {
         Console.WriteLine($"[CLIENTE] Respuesta: {text.Trim()}");
     }
 }
+*/

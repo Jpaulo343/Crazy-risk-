@@ -27,7 +27,7 @@ namespace Crazy_risk
 
         protected int size { get; set; }
 
-        public void añadir(T dato)
+        public void Añadir(T dato)
         {
             Nodo<T> nodo = new Nodo<T>(dato);
             size++;
@@ -45,7 +45,7 @@ namespace Crazy_risk
             }
         }
 
-        public bool buscar(T dato)
+        public bool Buscar(T dato)
         {
 
             Nodo<T> actual = Head;
@@ -60,6 +60,45 @@ namespace Crazy_risk
             }
             return false;
         }
+
+        public bool Eliminar(T dato)
+        {
+            if (Head == null)
+            {
+                return false;
+            }
+
+            if (Head.Value.Equals(dato))
+            {
+                Head = Head.Next;
+                if (Head == null)
+                {
+                    Tail = null;
+                }
+                size--;
+                return true;
+            }
+
+            Nodo<T> actual = Head;
+            while (actual.Next != null)
+            {
+                if (actual.Next.Value.Equals(dato))
+                {
+                    actual.Next = actual.Next.Next;
+                    if (actual.Next == null)
+                    {
+                        Tail = actual;
+                    }
+                    size--;
+                    return true;
+                }
+                actual = actual.Next;
+            }
+
+            // El nodo no fue encontrado
+            return false;
+        }
+
 
         public IEnumerable<T> Enumerar()
         {
