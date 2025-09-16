@@ -8,12 +8,43 @@ namespace Crazy_risk
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
+    using System.Windows.Media;
 
     public class Territorio : INotifyPropertyChanged
     {
         public string Nombre { get; private set; }
         public int Continente { get; private set; }
-        public string Estado { get; set; }
+        
+        private string conquistador;
+        private Brush _color;
+
+
+        public string Conquistador
+        {
+            get => conquistador;
+            set
+            {
+                if (conquistador != value)
+                {
+                    conquistador = value;
+                    color=DiccionarioColor_Nombre.obtener(Conquistador);
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public Brush color
+        {
+            get => _color;
+            set
+            {
+                if (_color != value)
+                {
+                    _color = value;
+                    OnPropertyChanged(nameof(_color));
+                }
+            }
+        }
         public int Tropas { get; set; }
         public ListaEnlazada<string> Adyacentes { get; set; }
 
@@ -34,15 +65,16 @@ namespace Crazy_risk
         public Territorio(string nombre, string estado, ListaEnlazada<string> adyacentes, int tropas, int continente)
         {
             Nombre = nombre;
-            Estado = estado;
+            Conquistador = estado;
             Adyacentes = adyacentes;
             Tropas = tropas;
             Continente = continente;
             estaSeleccionado = false;
+            color = DiccionarioColor_Nombre.obtener(Conquistador);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged(string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged != null)
             {
