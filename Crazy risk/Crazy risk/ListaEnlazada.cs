@@ -191,7 +191,7 @@ namespace Crazy_risk
         /*
          Esta función permite pasar una función lambda como parametro de la forma (j => j.propiedad == dato_A_Comparar) 
         */
-        public T? BuscarPorCondición(Func<T, bool> criterio)
+        public T? BuscarPorCondición(Func<T, bool> criterio) 
         {
             Nodo<T> actual = Head;
             while (actual != null)

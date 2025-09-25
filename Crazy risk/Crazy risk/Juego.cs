@@ -12,8 +12,8 @@ namespace Crazy_risk
         public ListaEnlazada<Jugador> listaJugadores { get; private set; }
         public int contadorFibonacciCartas { get; private set; }
         public Random generadorAleatorio { get; private set; }
-
-        public int jugadorActivo { get; private set; } //Puede ser 0, 1 o 2, es el indice de la lista "jugadores"
+        public bool rondaInicial { get; private set; }
+        public int jugadorActivo { get; private set; } //Puede ser 0 o 1, es el indice de la lista "jugadores"
 
         public Juego(ListaTerritorios territorios, ListaEnlazada<Jugador> jugadores, Random generadorDeNumeros)
         {
@@ -22,21 +22,38 @@ namespace Crazy_risk
             this.contadorFibonacciCartas = contadorFibonacciCartas;
             this.jugadorActivo = 0;
             this.generadorAleatorio = generadorDeNumeros;
+            rondaInicial = false;
         }
 
 
         public Jugador VerificarVictoria()
         {
             string ganador = listaTerritorios.VerificarVictoria();
-            if (ganador != null) 
+            if (ganador != null)
             {
-                return this.listaJugadores.BuscarPorCondición(j=>j.Nombre==ganador);
+                return this.listaJugadores.BuscarPorCondición(j => j.Nombre == ganador);
             }
-            return null;            
+            return null;
         }
         public int LanzarDado()
         {
             return generadorAleatorio.Next(1, 7);
         }
+
+        public void cambiarTurno()
+        {
+            jugadorActivo = (jugadorActivo + 1) % 2;
+        }
+
+        public void EjecutarRondaInicial()
+        {
+            rondaInicial = true;
+        }
+
+        public Jugador ObtenerJugadorActual() 
+        {
+         return listaJugadores.ObtenerEnIndice(jugadorActivo);
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -9,21 +10,34 @@ using System.Windows.Media;
 
 namespace Crazy_risk
 {
-    public class Jugador
+    public class Jugador : INotifyPropertyChanged
     {
         public string Nombre { get; private set; }
         public Brush Color { get; private set; }
 
-        public int Fase { get; private set; }
+        private int tropasDisponibles;
+        private int fase;
+        public int TropasDisponibles
+        {
+            get => tropasDisponibles;
+            set { tropasDisponibles = value; OnPropertyChanged(); }
+        }
+
+        public int Fase
+        {
+            get => fase;
+            set { fase = value; OnPropertyChanged(); }
+        }
+
         public ListaEnlazada<string> territorios_Conquistados { get; set; }
 
         // añadir atributo de cartas, debe ser una lista de objetos de carta
 
-        public int tropasDisponibles {  get;  private set; }
+
         public Jugador(string nombre, Brush color, int fase, ListaEnlazada<string> territorios_Conquistados, int tropasDisponibles) {
             this.Nombre = nombre;
             this.Color = color;
-            this.Fase = fase;
+            this.fase = fase;
             this.territorios_Conquistados = territorios_Conquistados;
             this.tropasDisponibles = tropasDisponibles;
         }
@@ -49,25 +63,17 @@ namespace Crazy_risk
             t.Conquistador = Nombre; 
             t.Tropas = 1; 
         }
-    }
-
-
-
-    public static class PlayerColorProvider
-    {
-        static Dictionary<string, Brush> map = new();
-
-        public static void Register(string playerName, Brush brush)
+        public void AgregarTropas(int cantidad)
         {
-            if (playerName == null) return;
-            map[playerName] = brush;
+            tropasDisponibles += cantidad;
         }
 
-        public static Brush? GetBrush(string playerName)
+        //Funciones de notificación a la interfaz
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = null)
         {
-            if (playerName == null) return null;
-            if (map.TryGetValue(playerName, out var b)) return b;
-            return null;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 

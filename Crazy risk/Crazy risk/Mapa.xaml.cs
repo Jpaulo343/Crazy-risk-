@@ -28,6 +28,23 @@ namespace Crazy_risk
         {
             InitializeComponent();
             Iniciar_Juego();
+
+            //Esto lo cambierá despues para que se detecte automaticamente, está así por ahora, por pruebasW
+            NombreJugadorText1.Text = juego.listaJugadores.ObtenerEnIndice(0).Nombre;
+            NombreJugadorText2.Text = juego.listaJugadores.ObtenerEnIndice(1).Nombre;
+            NombreJugadorText3.Text = juego.listaJugadores.ObtenerEnIndice(2).Nombre;
+            ColorJugador1.Fill = juego.listaJugadores.ObtenerEnIndice(0).Color;
+            ColorJugador2.Fill = juego.listaJugadores.ObtenerEnIndice(1).Color;
+            ColorJugador3.Fill = juego.listaJugadores.ObtenerEnIndice(2).Color;
+            PanelEstado.DataContext = juego.ObtenerJugadorActual();
+
+
+            //cambia la fase para comprobar que la interfaz funciona
+            Task.Delay(3000).ContinueWith(_ =>
+            {
+                Dispatcher.Invoke(() => juego.ObtenerJugadorActual().Fase = 2);
+            });
+
         }
 
 
@@ -39,10 +56,10 @@ namespace Crazy_risk
         {
             ListaEnlazada<Brush> colores = new ListaEnlazada<Brush>();
 
-            Brush orangeBrush = Brushes.Orange;
-            Brush greenBrush = Brushes.Green;
+            Brush orangeBrush = Brushes.LightSalmon;
+            Brush greenBrush = Brushes.LightGreen;
 
-            Brush lightBlueBrush = Brushes.LightBlue;
+            Brush lightBlueBrush = Brushes.MediumPurple;
 
 
             colores.Añadir(orangeBrush);
@@ -54,36 +71,34 @@ namespace Crazy_risk
             string nombre3 = "jugador neutral";
 
 
-            DiccionarioColor_Nombre.regisrar(nombre1, colores.Seleccionar_Y_Eliminar_Random());
-            DiccionarioColor_Nombre.regisrar(nombre2, colores.Seleccionar_Y_Eliminar_Random());
             DiccionarioColor_Nombre.regisrar(nombre3, colores.Seleccionar_Y_Eliminar_Random());
+            DiccionarioColor_Nombre.regisrar(nombre2, colores.Seleccionar_Y_Eliminar_Random());
+            DiccionarioColor_Nombre.regisrar(nombre1, colores.Seleccionar_Y_Eliminar_Random());
 
             ListaTerritorios territorios = cargarDatosTerritorios();
             Random generadorAleatorio = new Random();
 
 
             ListaEnlazada<string> territorios1 = new ListaEnlazada<string>();
-            Jugador jugador1 = new Jugador(nombre1,DiccionarioColor_Nombre.obtener(nombre1) ,0, territorios1, 40);
+            Jugador jugador1 = new Jugador(nombre1,DiccionarioColor_Nombre.obtener(nombre1) ,1, territorios1, 40);
 
 
 
             ListaEnlazada<string> territorios2 = new ListaEnlazada<string>();
-            Jugador jugador2 = new Jugador(nombre2, DiccionarioColor_Nombre.obtener(nombre2), 0, territorios2, 40);
+            Jugador jugador2 = new Jugador(nombre2, DiccionarioColor_Nombre.obtener(nombre2), 1, territorios2, 40);
             
 
             ListaEnlazada<string> territorios3 = new ListaEnlazada<string>();
-            Jugador jugador3 = new Jugador(nombre3, DiccionarioColor_Nombre.obtener(nombre2), 0, territorios3, 40);
+            Jugador jugador3 = new Jugador(nombre3, DiccionarioColor_Nombre.obtener(nombre3), 1, territorios3, 40);
 
             ListaEnlazada<Jugador> jugadores = new ListaEnlazada<Jugador>();
-            jugadores.Añadir(jugador1);
-            jugadores.Añadir(jugador2);
+
             jugadores.Añadir(jugador3);
+            jugadores.Añadir(jugador2);
+            jugadores.Añadir(jugador1);
             RepartirTerritorios(territorios,jugadores, generadorAleatorio);
 
-            Console.WriteLine(territorios);
-
             juego = new Juego(territorios, jugadores, generadorAleatorio);
-
         }
 
 
