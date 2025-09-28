@@ -54,11 +54,15 @@ namespace Crazy_risk
             this.jugadorActivo = 0;
             Random generadorAleatorio = new Random();
             this.generadorAleatorio = generadorAleatorio;
-            rondaInicial = false;
+            rondaInicial = true;
 
             RepartirTerritorios();
         }
 
+        public void iniciarJuego()
+        {
+            
+        }
 
         //Esta función se encarga de tomar todos los territorios y asignarles un dueño de manera aleatoria
         internal void RepartirTerritorios()
@@ -125,14 +129,14 @@ namespace Crazy_risk
         }
 
         //Activa la ronda inicial, en la cual los jugadores se turnan para colocar sus tropas iniciales
-        public void EjecutarRondaInicial()
-        {
-            rondaInicial = true;
-        }
-
-        public void selecionarTerritorio()
+        public void FinalizarRondaInicial()
         {
             rondaInicial = false;
+        }
+
+        public void selecionarTerritorio(Territorio territorio)
+        {
+            territorio!.EstaSeleccionado = !territorio.EstaSeleccionado;
         }
 
         //Devuelve el jugador que tiene el turno actual
@@ -140,6 +144,35 @@ namespace Crazy_risk
         {
          return listaJugadores.ObtenerEnIndice(jugadorActivo);
         }
+        public void IncrementarContadorFibonacciCartas()
+        {
+            contadorFibonacciCartas++;
+        }
 
+        public bool AñadirTropas(Territorio territorio) 
+        {
+            Jugador jugador= ObtenerJugadorActual();
+            if (territorio.Conquistador == jugador.Nombre && jugador.TropasDisponibles > 0)
+            {
+                territorio.AgregarTropas(1);
+                jugador.TropasDisponibles--;
+
+                // Si ya no tiene tropas, pasa turno
+                if (jugador.TropasDisponibles == 0 && rondaInicial)
+                {
+                    cambiarTurno();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+       public void deseleccionarTerritorios() 
+       {
+        foreach (var territorio in listaTerritorios.Enumerar())
+            {
+                territorio.EstaSeleccionado = false;
+            }
+        }
     }
 }

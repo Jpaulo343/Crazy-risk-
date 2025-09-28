@@ -25,7 +25,7 @@ namespace Crazy_risk
             get => tropasDisponibles;
             set { tropasDisponibles = value; OnPropertyChanged(); }
         }
-        private int fase;
+        private int fase; //debe ser 1, 2 o 3
         public int Fase
         {
             get => fase;

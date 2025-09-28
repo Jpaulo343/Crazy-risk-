@@ -24,13 +24,14 @@ namespace Crazy_risk
     public partial class Mapa : Page
     {
         public Juego juego { get; private set; }
+        public string jugadorLocal { get; private set; }
         public Mapa()
         {
             InitializeComponent();
-
+            jugadorLocal = "Jugador1";
             juego = new Juego("Jugador1", "Jugador2");
 
-            //Esto lo cambierá despues para que se detecte automaticamente, está así por ahora, por pruebas
+
             NombreJugadorText1.Text = juego.listaJugadores.ObtenerEnIndice(0).Nombre;
             NombreJugadorText2.Text = juego.listaJugadores.ObtenerEnIndice(1).Nombre;
             NombreJugadorText3.Text = juego.listaJugadores.ObtenerEnIndice(2).Nombre;
@@ -38,40 +39,79 @@ namespace Crazy_risk
             ColorJugador2.Fill = juego.listaJugadores.ObtenerEnIndice(1).Color;
             ColorJugador3.Fill = juego.listaJugadores.ObtenerEnIndice(2).Color;
             PanelEstado.DataContext = juego.ObtenerJugadorActual();
+            CuadrosCartas.DataContext = juego.ObtenerJugadorActual();
             foreach (var t in juego.listaTerritorios.Enumerar())
             {
                 System.Windows.Shapes.Path pathObjeto = this.FindName(t.Nombre) as System.Windows.Shapes.Path;
                 if (pathObjeto != null)
                 {
                     pathObjeto.DataContext = t;
-                    Debug.WriteLine($"Asignado {t.Nombre} al Path {pathObjeto.Name}");
                 }
             }
 
-            //cambia la fase para comprobar que la interfaz funciona
-            Task.Delay(3000).ContinueWith(_ =>
-            {
-                Dispatcher.Invoke(() => juego.ObtenerJugadorActual().Fase = 2);
-            });
+            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Infanteria, "alaasdsadasdasska"));
+            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Caballeria, "japon"));
+            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Caballeria, "camerun"));
+            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Artilleria, "westUs"));
+            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Artilleria, "brasil"));
+            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Caballeria, "peru"));
+            actualizarTextoGuia();
 
         }
 
 
+
+        /*
+         Esta funcion maneja el evento de click izquierdo en un territorio del mapa.
+         Si el jugador local es el jugador actual, permite seleccionar o deseleccionar el territorio clickeado
+         y, si no es la ronda inicial, intenta añadir tropas al territorio seleccionado.
+         */
         private void Territorio_ClickIzquierdo(object sender, MouseButtonEventArgs e)
         {
-            
-            var pathClickeado = sender as System.Windows.Shapes.Path;
-
-            if (pathClickeado != null)
+            if (jugadorLocal == juego.ObtenerJugadorActual().Nombre)
             {
-                var territorioClickeado = pathClickeado.DataContext as Territorio;
+                juego.deseleccionarTerritorios();
+                var pathClickeado = sender as System.Windows.Shapes.Path;
+                if (pathClickeado == null) return;
 
-                if (territorioClickeado != null)
+                Territorio? territorioClickeado = pathClickeado.DataContext as Territorio;
+                bool jugadorCambiado=false;
+                if (juego.rondaInicial)
                 {
-                    territorioClickeado.EstaSeleccionado = !territorioClickeado.EstaSeleccionado; 
+                    jugadorCambiado = juego.AñadirTropas(territorioClickeado!);
+                }
+                juego.selecionarTerritorio(territorioClickeado!);
+                if (jugadorCambiado) 
+                {
+                    actualizarInterfaz();
                 }
             }
         
+        }
+
+        private void actualizarInterfaz()
+        {
+            PanelEstado.DataContext = juego.ObtenerJugadorActual();
+            CuadrosCartas.DataContext = juego.ObtenerJugadorActual();
+            actualizarTextoGuia();
+
+        }
+
+        private void actualizarTextoGuia()
+        {
+            TextoGuía.Text = "Turno de " + juego.ObtenerJugadorActual().Nombre;
+            if (juego.ObtenerJugadorActual().Fase == 1)
+            {
+                TextoGuía.Text += ": Coloca tus tropas";
+            }
+            else if (juego.ObtenerJugadorActual().Fase == 2)
+            {
+                TextoGuía.Text += ": Ataca un territorio enemigo";
+            }
+            else
+            {
+                TextoGuía.Text += ": Reubica tus tropas";
+            }
         }
 
     }

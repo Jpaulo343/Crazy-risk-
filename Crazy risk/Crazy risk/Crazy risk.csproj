@@ -10,6 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="imagenes\artilleria.png" />
+    <None Remove="imagenes\caballeria.png" />
+    <None Remove="imagenes\infanteria.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="imagenes\artilleria.png" />
+    <Resource Include="imagenes\caballeria.png" />
+    <Resource Include="imagenes\infanteria.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="DatosTerritorios.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
