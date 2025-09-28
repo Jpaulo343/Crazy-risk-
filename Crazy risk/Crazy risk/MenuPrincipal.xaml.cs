@@ -1,38 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace test_mapa_del_mundo
+namespace Crazy_risk
 {
-    /// <summary>
-    /// Interaction logic for Page1.xaml
-    /// </summary>
-    public partial class Page1 : Page
+    public partial class MenuPrincipal : Page
     {
-        public Page1()
+        public MenuPrincipal()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void BtnCrear_Click(object sender, RoutedEventArgs e)
         {
-
+            // TODO: lógica para crear la partida (servidor)
+            MessageBox.Show("Crear partida (Servidor)");
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void BtnUnirse_Click(object sender, RoutedEventArgs e)
         {
+            // TODO: lógica para unirse como cliente
+            MessageBox.Show("Unirse a partida (Cliente)");
+        }
 
+        private void BtnSalir_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

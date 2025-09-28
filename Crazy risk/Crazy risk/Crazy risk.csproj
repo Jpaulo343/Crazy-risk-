@@ -19,6 +19,11 @@
     <Resource Include="imagenes\artilleria.png" />
     <Resource Include="imagenes\caballeria.png" />
     <Resource Include="imagenes\infanteria.png" />
+    <None Remove="fotos\Imagenesfondo.png" />
+    <Resource Include="fotos\Imagenesfondo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+
   </ItemGroup>
 
   <ItemGroup>
