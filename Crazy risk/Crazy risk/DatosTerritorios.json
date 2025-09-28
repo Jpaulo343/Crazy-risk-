@@ -9,287 +9,287 @@
     {
         "Nombre": "northwest_territory",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 0,
         "Adyacentes": [ "alaska", "alberta", "ontario", "greenland" ]
     },
     {
         "Nombre": "greenland",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 0,
         "Adyacentes": [ "northwest_territory", "ontario", "quebec", "iceland" ]
     },
     {
         "Nombre": "alberta",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 0,
         "Adyacentes": [ "northwest_territory", "alaska", "ontario", "western_united_states" ]
     },
     {
         "Nombre": "ontario",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 0,
         "Adyacentes": [ "greenland", "quebec", "eastern_united_states", "western_united_states", "alberta", "northwest_territory" ]
     },
     {
         "Nombre": "quebec",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 0,
         "Adyacentes": [ "greenland", "ontario", "eastern_united_states" ]
     },
     {
         "Nombre": "western_united_states",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 0,
         "Adyacentes": [ "alberta", "ontario", "eastern_united_states", "central_america" ]
     },
     {
         "Nombre": "eastern_united_states",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 0,
         "Adyacentes": [ "quebec", "ontario", "western_united_states", "central_america" ]
     },
     {
         "Nombre": "central_america",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 0,
         "Adyacentes": [ "western_united_states", "eastern_united_states", "venezuela" ]
     },
     {
         "Nombre": "venezuela",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 1,
         "Adyacentes": [ "central_america", "peru", "brazil" ]
     },
     {
         "Nombre": "peru",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 1,
         "Adyacentes": [ "venezuela", "brazil", "argentina" ]
     },
     {
         "Nombre": "brazil",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 1,
         "Adyacentes": [ "venezuela", "peru", "argentina", "north_africa" ]
     },
     {
         "Nombre": "argentina",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 1,
         "Adyacentes": [ "peru", "brazil" ]
     },
     {
         "Nombre": "iceland",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 2,
         "Adyacentes": [ "greenland", "great_britain", "scandinavia" ]
     },
     {
         "Nombre": "great_britain",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 2,
         "Adyacentes": [ "iceland", "scandinavia", "northern_europe", "western_europe" ]
     },
     {
         "Nombre": "scandinavia",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 2,
         "Adyacentes": [ "iceland", "great_britain", "northern_europe", "ukraine" ]
     },
     {
         "Nombre": "northern_europe",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 2,
         "Adyacentes": [ "great_britain", "scandinavia", "ukraine", "western_europe", "southern_europe" ]
     },
     {
         "Nombre": "western_europe",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 2,
         "Adyacentes": [ "great_britain", "northern_europe", "southern_europe", "north_africa" ]
     },
     {
         "Nombre": "southern_europe",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 2,
         "Adyacentes": [ "western_europe", "northern_europe", "ukraine", "egypt", "middle_east", "north_africa" ]
     },
     {
         "Nombre": "ukraine",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 2,
         "Adyacentes": [ "scandinavia", "northern_europe", "southern_europe", "afghanistan", "ural", "middle_east" ]
     },
     {
         "Nombre": "north_africa",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 3,
         "Adyacentes": [ "brazil", "western_europe", "southern_europe", "egypt", "congo", "east_africa" ]
     },
     {
         "Nombre": "egypt",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 3,
         "Adyacentes": [ "north_africa", "southern_europe", "middle_east", "east_africa" ]
     },
     {
         "Nombre": "congo",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 3,
         "Adyacentes": [ "north_africa", "east_africa", "south_africa" ]
     },
     {
         "Nombre": "east_africa",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 3,
         "Adyacentes": [ "egypt", "north_africa", "congo", "south_africa", "madagascar", "middle_east" ]
     },
     {
         "Nombre": "south_africa",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 3,
         "Adyacentes": [ "congo", "east_africa", "madagascar" ]
     },
     {
         "Nombre": "madagascar",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 3,
         "Adyacentes": [ "east_africa", "south_africa" ]
     },
     {
         "Nombre": "middle_east",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "ukraine", "southern_europe", "egypt", "east_africa", "afghanistan", "india" ]
     },
     {
         "Nombre": "afghanistan",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "ural", "ukraine", "middle_east", "india", "china" ]
     },
     {
         "Nombre": "ural",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "ukraine", "afghanistan", "china", "siberia" ]
     },
     {
         "Nombre": "siberia",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "ural", "china", "mongolia", "irkutsk", "yakutsk" ]
     },
     {
         "Nombre": "china",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "siberia", "ural", "afghanistan", "india", "siam", "mongolia" ]
     },
     {
         "Nombre": "india",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "middle_east", "afghanistan", "china", "siam" ]
     },
     {
         "Nombre": "siam",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "china", "india", "indonesia" ]
     },
     {
         "Nombre": "mongolia",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "siberia", "irkutsk", "kamchatka", "japan", "china" ]
     },
     {
         "Nombre": "kamchatka",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "alaska", "mongolia", "japan", "yakutsk", "irkutsk" ]
     },
     {
         "Nombre": "japan",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "mongolia", "kamchatka" ]
     },
     {
         "Nombre": "yakutsk",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "siberia", "irkutsk", "kamchatka" ]
     },
     {
         "Nombre": "irkutsk",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 4,
         "Adyacentes": [ "siberia", "yakutsk", "kamchatka", "mongolia" ]
     },
     {
         "Nombre": "indonesia",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 5,
         "Adyacentes": [ "siam", "new_guinea", "western_australia" ]
     },
     {
         "Nombre": "new_guinea",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 5,
         "Adyacentes": [ "indonesia", "eastern_australia", "western_australia" ]
     },
     {
         "Nombre": "eastern_australia",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 5,
         "Adyacentes": [ "new_guinea", "western_australia" ]
     },
     {
         "Nombre": "western_australia",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 5,
         "Adyacentes": [ "indonesia", "new_guinea", "eastern_australia" ]
     }

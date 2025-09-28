@@ -45,8 +45,39 @@ namespace Crazy_risk
                 }
             }
         }
-        public int Tropas { get; set; }
-        public ListaEnlazada<string> Adyacentes { get; set; }
+
+        private int tropas;
+        public int Tropas
+        {
+            get => tropas;
+            set
+            {
+                if (value >= 0)
+                {
+                    tropas = value;
+                    OnPropertyChanged(nameof(Tropas));
+                }
+            }
+        }
+
+        // Método para sumar tropas
+        public void AgregarTropas(int cantidad)
+        {
+            if (cantidad > 0)
+            {
+                Tropas = Tropas + cantidad;
+            }
+        }
+
+        // Método para restar tropas
+        public void QuitarTropas(int cantidad)
+        {
+            if (cantidad > 0 && Tropas >= cantidad)
+            {
+                Tropas = Tropas - cantidad;
+            }
+        }
+        public ListaEnlazada<string> Adyacentes { get; private set; }
 
         private bool estaSeleccionado;
         public bool EstaSeleccionado
@@ -72,6 +103,7 @@ namespace Crazy_risk
             estaSeleccionado = false;
             color = DiccionarioColor_Nombre.obtener(Conquistador);
         }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
