@@ -1,19 +1,51 @@
-﻿<Page x:Class="test_mapa_del_mundo.Page1"
+﻿<Page x:Class="Crazy_risk.MenuPrincipal"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:test_mapa_del_mundo"
-      mc:Ignorable="d" 
-      Title="Page1" Height="715" Width="1128">
-
-
+      Title="Menú">
 
     <Grid>
-        <Label Content="Crazy Risk" HorizontalAlignment="Center" Margin="0,54,0,0" VerticalAlignment="Top" Width="220" FontFamily="Arial Black" FontSize="36">
-        </Label>
-        <Button Content="Jugar" Foreground="#005C99" HorizontalAlignment="Center" Margin="0,238,0,0" VerticalAlignment="Top" FontFamily="Arial Black" FontSize="22" Click="Button_Click" Height="120" Width="388"/>
-        <Button Content="Salir" HorizontalAlignment="Center" Margin="0,485,0,0" VerticalAlignment="Top" FontFamily="Arial Black" FontSize="22" RenderTransformOrigin="1.136,0" Height="115" Width="388" Click="Button_Click_1"/>
+        <!-- Imagen de fondo que mantiene proporciones -->
+        <Image Source="Imagenes/imagenesondo.png"
+           Stretch="UniformToFill"
+           Panel.ZIndex="-1"/>
 
+        <!-- Controles del menú -->
+        <StackPanel Width="360" Margin="24" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock Text="Crazy Risk" 
+                 FontSize="36" 
+                 FontFamily="Arial Black" 
+                 Margin="0,0,0,24" 
+                 HorizontalAlignment="Center" 
+                 Foreground="White"/>
+
+            <TextBlock Text="Alias" Margin="0,0,0,4" Foreground="White"/>
+            <TextBox x:Name="TxtAlias" Text="Jugador" Margin="0,0,0,12"/>
+
+            <Button x:Name="BtnCrear"
+              Content="Crear partida (Servidor)"
+              Height="44" FontSize="18"
+              Click="BtnCrear_Click"
+              Margin="0,0,0,16"/>
+
+            <Separator Margin="0,8,0,8"/>
+
+            <TextBlock Text="IP del servidor" Margin="0,0,0,4" Foreground="White"/>
+            <TextBox x:Name="TxtIp" Text="127.0.0.1" Margin="0,0,0,8"/>
+
+            <TextBlock Text="Puerto" Margin="0,0,0,4" Foreground="White"/>
+            <TextBox x:Name="TxtPuerto" Text="5000" Margin="0,0,0,12"/>
+
+            <Button x:Name="BtnUnirse"
+              Content="Unirse a partida (Cliente)"
+              Height="44" FontSize="18"
+              Click="BtnUnirse_Click"/>
+
+            <Separator Margin="0,16,0,16"/>
+
+            <Button x:Name="BtnSalir" 
+              Content="Salir" 
+              Height="40" 
+              Click="BtnSalir_Click"/>
+        </StackPanel>
     </Grid>
 </Page>
