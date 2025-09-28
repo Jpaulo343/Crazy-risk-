@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -249,5 +250,45 @@ namespace Crazy_risk
         }
     }
 
+
+    // A partir de aquí se declara el diccionario de colores y nombres
+    public class DatoColor_Nombre
+    {
+        public string jugador { get; private set; }
+        public Brush brush { get; private set; }
+        public DatoColor_Nombre(string jugador, Brush brush)
+        {
+            this.jugador = jugador;
+            this.brush = brush;
+        }
+    }
+
+    /*
+     Se define la calse DiccionarioColor_Nombre
+        Esta clase permite asignar un color a cada jugador de tal forma que la interfaz de WFP pueda encontrar el color que debe 
+        tener cada territorio a partir del nombre del dueño 
+     */
+    public static class DiccionarioColor_Nombre
+    {
+        private static ListaEnlazada<DatoColor_Nombre> lista = new ListaEnlazada<DatoColor_Nombre>();
+
+        public static void registrar(string nombre, Brush color)
+        {
+            lista.Añadir(new DatoColor_Nombre(nombre, color));
+        }
+
+        public static Brush obtener(string nombre)
+        {
+            var nodo = lista.Head;
+            while (nodo != null)
+            {
+                if (nodo.Value.jugador == nombre)
+                    return nodo.Value.brush;
+
+                nodo = nodo.Next;
+            }
+            return Brushes.LightGray;
+        }
+    }
 }
 

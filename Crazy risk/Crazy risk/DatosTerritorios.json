@@ -2,7 +2,7 @@
     {
         "Nombre": "alaska",
         "Estado": "libre",
-        "Tropas": 0,
+        "Tropas": 1,
         "Continente": 0,
         "Adyacentes": [ "northwest_territory", "alberta", "kamchatka" ]
     },

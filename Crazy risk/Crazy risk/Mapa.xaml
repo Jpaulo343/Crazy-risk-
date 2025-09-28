@@ -1412,7 +1412,7 @@
                 <!-- Fase -->
                 <TextBlock Text="Fase" 
                    FontSize="30" 
-                   Margin="389,10,0,0" 
+                   Margin="393,11,0,0" 
                    VerticalAlignment="Top" 
                    HorizontalAlignment="Left" RenderTransformOrigin="1.169,0.752"/>
 
@@ -1457,15 +1457,15 @@
                 </Rectangle>
 
                 <!-- Tropas -->
-                <TextBlock Text="Tropas" 
+                <TextBlock Text="Tropas Disponibles" 
                    FontSize="30"
-                   Margin="600,10,0,0"
+                   Margin="574,10,0,0"
                    VerticalAlignment="Top"
                    HorizontalAlignment="Left"/>
 
                 <TextBlock Text="{Binding TropasDisponibles}" 
                    FontSize="30"
-                   Margin="620,50,0,0"
+                   Margin="683,50,0,0"
                    VerticalAlignment="Top"
                    HorizontalAlignment="Left"/>
             </Grid>
@@ -1473,6 +1473,5 @@
 
         <Rectangle Height="312" Fill="AliceBlue" Stroke="Black" Canvas.Top="129" Width="241" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBlock x:Name="Cartas" FontSize="30" Canvas.Left="74" TextWrapping="Wrap"  Canvas.Top="141" HorizontalAlignment="Left" VerticalAlignment="Top"><Run Text="C"/><Run Language="es-cr" Text="artas"/></TextBlock>
-
     </Canvas>
 </Page>

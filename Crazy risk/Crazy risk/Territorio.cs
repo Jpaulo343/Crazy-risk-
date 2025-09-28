@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Crazy_risk
 {
     using System.ComponentModel;
@@ -14,11 +15,9 @@ namespace Crazy_risk
     {
         public string Nombre { get; private set; }
         public int Continente { get; private set; }
-        
+        public ListaEnlazada<string> Adyacentes { get; private set; }
+
         private string conquistador;
-        private Brush _color;
-
-
         public string Conquistador
         {
             get => conquistador;
@@ -33,6 +32,7 @@ namespace Crazy_risk
             }
         }
 
+        private Brush _color;
         public Brush color
         {
             get => _color;
@@ -42,6 +42,20 @@ namespace Crazy_risk
                 {
                     _color = value;
                     OnPropertyChanged(nameof(_color));
+                }
+            }
+        }
+
+        private bool estaSeleccionado;
+        public bool EstaSeleccionado
+        {
+            get { return estaSeleccionado; }
+            set
+            {
+                if (estaSeleccionado != value)
+                {
+                    estaSeleccionado = value;
+                    OnPropertyChanged();
                 }
             }
         }
@@ -59,8 +73,9 @@ namespace Crazy_risk
                 }
             }
         }
-
-        // Método para sumar tropas
+        /*
+            Suma la catidad de tropas especificada al territorio actual.
+         */
         public void AgregarTropas(int cantidad)
         {
             if (cantidad > 0)
@@ -69,27 +84,14 @@ namespace Crazy_risk
             }
         }
 
-        // Método para restar tropas
+        /*
+            Quita la catidad de tropas especificada al territorio actual.
+         */
         public void QuitarTropas(int cantidad)
         {
             if (cantidad > 0 && Tropas >= cantidad)
             {
                 Tropas = Tropas - cantidad;
-            }
-        }
-        public ListaEnlazada<string> Adyacentes { get; private set; }
-
-        private bool estaSeleccionado;
-        public bool EstaSeleccionado
-        {
-            get {  return estaSeleccionado; }
-            set
-            {
-                if (estaSeleccionado != value)
-                {
-                    estaSeleccionado = value;
-                    OnPropertyChanged();
-                }
             }
         }
 
