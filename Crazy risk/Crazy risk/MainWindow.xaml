@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Crazy_risk"
         mc:Ignorable="d"
-        Title="MainWindow" Height="715" Width="1128">
+        Title="MainWindow" Height="755" Width="1140">
     
     <Grid>
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>

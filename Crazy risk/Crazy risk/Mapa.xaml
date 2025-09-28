@@ -1512,5 +1512,6 @@
                 FontSize="15"/>
 
         </Border>
+        <Button Content="Terminar Fase" FontSize="14" Canvas.Top="624" Height="58" Width="241" HorizontalAlignment="Center" VerticalAlignment="Top" Click="avanzarFase_Click"/>
     </Canvas>
 </Page>

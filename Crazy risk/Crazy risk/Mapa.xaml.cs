@@ -25,11 +25,11 @@ namespace Crazy_risk
     {
         public Juego juego { get; private set; }
         public string jugadorLocal { get; private set; }
-        public Mapa()
+        public Mapa(string Nombre1,string Nombre2,string local)
         {
             InitializeComponent();
-            jugadorLocal = "Jugador1";
-            juego = new Juego("Jugador1", "Jugador2");
+            jugadorLocal = local;
+            juego = new Juego(Nombre1, Nombre2);
 
 
             NombreJugadorText1.Text = juego.listaJugadores.ObtenerEnIndice(0).Nombre;
@@ -68,7 +68,7 @@ namespace Crazy_risk
          */
         private void Territorio_ClickIzquierdo(object sender, MouseButtonEventArgs e)
         {
-            if (jugadorLocal == juego.ObtenerJugadorActual().Nombre)
+            if (CondiciónParaJugar())
             {
                 juego.deseleccionarTerritorios();
                 var pathClickeado = sender as System.Windows.Shapes.Path;
@@ -89,6 +89,19 @@ namespace Crazy_risk
         
         }
 
+        private bool CondiciónParaJugar()
+        {
+            return (jugadorLocal == juego.ObtenerJugadorActual().Nombre);
+        }
+        private void avanzarFase_Click(object sender, RoutedEventArgs e)
+        {
+            if (CondiciónParaJugar())
+            {
+                juego.AvanzarFase();
+                actualizarInterfaz();
+            }
+        }
+
         private void actualizarInterfaz()
         {
             PanelEstado.DataContext = juego.ObtenerJugadorActual();
@@ -97,6 +110,10 @@ namespace Crazy_risk
 
         }
 
+
+        /*
+          Actualiza el texto de la guía para reflejar el turno y la fase del jugador actual.
+         */
         private void actualizarTextoGuia()
         {
             TextoGuía.Text = "Turno de " + juego.ObtenerJugadorActual().Nombre;

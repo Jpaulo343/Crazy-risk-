@@ -160,11 +160,25 @@ namespace Crazy_risk
                 // Si ya no tiene tropas, pasa turno
                 if (jugador.TropasDisponibles == 0 && rondaInicial)
                 {
-                    cambiarTurno();
+
+                    AvanzarFase();
                     return true;
                 }
             }
             return false;
+        }
+        public void AvanzarFase() 
+        {
+            if (rondaInicial) 
+            {
+                if (jugadorActivo == 1)
+                {
+                    repartirtropasBot();
+                    rondaInicial = false;
+                }
+                cambiarTurno();
+            }
+
         }
 
        public void deseleccionarTerritorios() 
@@ -172,6 +186,27 @@ namespace Crazy_risk
         foreach (var territorio in listaTerritorios.Enumerar())
             {
                 territorio.EstaSeleccionado = false;
+            }
+        }
+
+        public void repartirtropasBot()
+        {
+            Jugador bot = listaJugadores.ObtenerEnIndice(2);
+            while (bot.TropasDisponibles > 0)
+            {
+                // Fix: Get the territory name, then find the Territorio object in listaTerritorios
+                string territorioNombre = bot.territorios_Conquistados.ObtenerEnIndice(generadorAleatorio.Next(0, bot.territorios_Conquistados.size));
+                Territorio territorio = listaTerritorios.BuscarPorCondición(t => t.Nombre == territorioNombre)!;
+                if (territorio != null)
+                {
+                    territorio.AgregarTropas(1);
+                    bot.TropasDisponibles--;
+                }
+                else
+                {
+                    // If not found, just decrement to avoid infinite loop
+                    bot.TropasDisponibles--;
+                }
             }
         }
     }

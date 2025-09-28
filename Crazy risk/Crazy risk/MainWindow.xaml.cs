@@ -19,7 +19,8 @@ namespace Crazy_risk
         public MainWindow()
         {
             InitializeComponent();
-            var mapaPage = new Mapa();
+            //Pasar el nombre de ambos jugadores como parametro, y como tercer parametro su nombre otra vez
+            var mapaPage = new Mapa("jugador1", "jugador2","jugador1");
 
             MainFrame.Content = mapaPage;
         }
