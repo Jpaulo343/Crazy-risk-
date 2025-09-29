@@ -26,6 +26,16 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="CartaStyle" TargetType="Border">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Background" Value="White" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Seleccionada}" Value="True">
+                    <Setter Property="Background" Value="LightYellow"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
     </Page.Resources>
 
     <Canvas x:Name="PrincipalCanvas" Margin="10,-2,10,6" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -43,6 +53,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=greenland}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -64,6 +75,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=alaska}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -83,6 +95,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=northwest_territory}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -102,6 +115,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=alberta}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -124,6 +138,7 @@
 
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=ontario}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -143,6 +158,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=quebec}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -162,6 +178,7 @@
         />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=eastern_united_states}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -181,6 +198,7 @@
         />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=western_united_states}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -200,6 +218,7 @@
         />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=central_america}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -219,6 +238,7 @@
         />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=venezuela}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -238,6 +258,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=argentina}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -257,6 +278,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=peru}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -276,6 +298,7 @@
         />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=brazil}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -296,6 +319,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=great_britain}"
+            IsHitTestVisible="False"
             FontSize="13"
             FontWeight="Bold"
             Foreground="Black"
@@ -316,6 +340,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=scandinavia}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -336,6 +361,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=northern_europe}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -356,6 +382,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=southern_europe}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -375,6 +402,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=western_europe}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -394,6 +422,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=ukraine}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -413,6 +442,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=iceland}"
+            IsHitTestVisible="False"
             FontSize="13"
             FontWeight="Bold"
             Foreground="Black"
@@ -434,6 +464,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=north_africa}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -453,6 +484,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=east_africa}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -471,6 +503,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=egypt}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -490,6 +523,7 @@
             />
         <TextBlock
             Text="{Binding DataContext.Tropas, ElementName=congo}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -508,7 +542,8 @@
             Data="M 547.125,504.125 C 547.75,505 550,503.125 550.75,503.75 C 551.5,504.375 553.5,505.75 554.25,506.125 C 555,506.5 559.125,505.875 560.125,506.625 C 561.125,507.375 561.875,507 561.875,507 C 561.875,507 561.25,511.25 561.875,511.875 C 562.5,512.5 564,513.25 564.875,512 C 565.75,510.75 572.25,510 572.625,511 C 573,512 572,514 573.25,515 C 574.5,516 575.375,516.75 575.25,517.75 C 575.125,518.75 573.875,519.75 574.375,521.125 C 574.875,522.5 576.25,523 577.75,522.875 C 579.25,522.75 579.125,523.875 580.375,524.125 C 581.625,524.375 586.5,524.375 587,524.75 C 587.5,525.125 588.75,526 589.125,526.625 C 589.5,527.25 590.875,529.5 591.75,528.625 C 592.625,527.75 593.625,523.125 592.25,522.625 C 590.875,522.125 590,522.125 590,520.625 C 590,519.125 590.75,516.5 591.25,516.5 C 591.75,516.5 592.375,515.875 592.375,515.875 C 592.375,515.875 596.25,515.875 595,514.875 C 595.625,514.625 597.375,514.25 597.625,515.125 C 597.875,516 597.375,517.625 598.375,517.625 C 599.375,517.625 600.5,519.125 600.875,519.875 C 601.25,520.625 602.25,520.5 602.625,522.25 C 603,524 603.5,523.75 602.875,524.875 C 602.25,526 602.125,526.125 602.5,527.375 C 602.875,528.625 604.5,530.75 604,532.25 C 603.5,533.75 602.75,535.75 603.5,537 C 604.25,538.25 606.25,540.25 606.875,539.75 C 607.5,539.25 608.375,538.75 608.375,537.5 C 608.375,536.25 608,534.125 608.375,533.125 C 608.75,532.125 610,533.875 609.125,531 C 608.25,528.125 607.625,528.25 608.75,526.75 C 609.875,525.25 610.875,525.375 612.125,525 C 613.375,524.625 614,524.5 614,524.5 C 614,524.5 615.5,523.125 616.625,523.125 C 617.75,523.125 619.375,521.5 619.375,521.5 C 619.375,521.5 619.125,521 619.125,521 C 619.125,521 622,520.125 621.5,521.125 C 621,522.125 622.375,525.75 622.375,525.75 C 622.375,525.75 622.5,526.5 622.75,527.5 C 623,528.5 622.875,528.625 623,529.625 C 623.125,530.625 622.625,531.125 622.5,531.875 C 622.375,532.625 622.625,533.25 622.75,534.25 C 622.875,535.25 622.125,537.5 621.875,538.125 C 621.625,538.75 620.875,538.75 620.375,539.25 C 619.875,539.75 619.75,540.5 618.625,541.625 C 617.5,542.75 617.75,542.75 617,543.875 C 616.25,545 616.875,544.375 615.75,546.125 C 614.625,547.875 615.125,546.625 614,547 C 612.875,547.375 612.25,548.625 611.75,548.75 C 611.25,548.875 609.875,550.125 609.125,554.75 C 608.375,559.375 609.875,560.25 609.5,561.125 C 609.125,562 606.75,565.375 606.375,566.375 C 606,567.375 605.625,567.25 604.5,567.75 C 603.375,568.25 603.75,570.25 603.75,571 C 603.75,571.75 603,574.25 601.625,575.5 C 600.25,576.75 601.5,576.625 601.875,577.125 C 602.25,577.625 602.25,578.25 602,579.875 C 601.75,581.5 600.375,580.625 599.625,581.125 C 598.875,581.625 596.5,584.375 596.75,585.375 C 597,586.375 598,586.25 598,586.25 C 598,586.25 596.375,588 594.875,589.875 C 593.375,591.75 595,591 595.375,592.25 C 595.75,593.5 594.5,592.5 593.75,592.5 C 593,592.5 592.875,592.875 592.125,593.5 C 591.375,594.125 590.875,594 587.375,594.75 C 583.875,595.5 586,596 584.25,597.25 C 582.5,598.5 582.625,598.875 577.75,598.875 C 572.875,598.875 574.5,599.375 573.625,599.75 C 572.75,600.125 572.125,600.125 571.125,600.125 C 570.125,600.125 569.375,600.625 568.75,601 C 568.125,601.375 567.625,602.375 567.625,602.375 C 567.625,602.375 567.125,602.125 566.625,601.25 C 566.125,600.375 565,600.75 564.125,600.625 C 563.25,600.5 563.125,600.375 562.25,599.25 C 561.375,598.125 562.5,597.75 562.5,597.125 C 562.5,596.5 561.75,594.5 561.75,593.5 C 561.75,592.5 561.75,592 561.75,590.75 C 561.75,589.5 561.625,589.5 561.625,588.125 C 561.625,586.75 561.625,586.625 561.25,585.875 C 560.875,585.125 559.875,584.25 559.625,582.875 C 559.375,581.5 559.625,581 559.625,579.875 C 559.625,578.75 558.375,579.375 558.125,578.875 C 557.875,578.375 557.25,577.875 556.75,576.375 C 556.25,574.875 556.875,575 556.875,573.75 C 556.875,572.5 556.875,572.375 556.875,571.375 C 556.875,570.375 556.125,570 555.875,569.375 C 555.625,568.75 554.125,566.125 554,565.25 C 553.875,564.375 553.75,563.875 553.75,562.75 C 553.75,561.625 553.875,561.75 554,560.875 C 554.125,560 553.375,559.5 553.375,558.875 C 553.375,558.25 550.125,555.125 550.125,555.125 C 550.125,555.125 549.75,554.875 549.625,554.125 C 549.5,553.375 548.875,552.875 547.75,551.5 C 546.625,550.125 547.125,550.125 547.25,549.125 C 547.375,548.125 547.125,547.125 547,546.5 C 546.875,545.875 545.625,543.125 545.625,543.125 C 545.625,543.125 545.5,541.875 545.75,540.875 C 546,539.875 546.375,539.625 546.5,538.125 C 546.625,536.625 546.5,537 546.625,536.125 C 546.75,535.25 546.875,535.25 547.25,534.5 C 547.625,533.75 548.25,533.125 548.25,532 C 548.25,530.875 549,529.875 549.25,529.375 C 549.5,528.875 550,528.375 550.75,527.25 C 551.5,526.125 550.375,526.5 550.5,525.5 C 550.625,524.5 550.375,523.75 550.25,523 C 550.125,522.25 548.25,519.875 547.75,518.5 C 547.25,517.125 549.5,515.75 551.25,513 L 551.3125,513 C 553.3125,510.0625 547.125,505.3125 547.125,504.125 z" HorizontalAlignment="Left" Canvas.Left="68" VerticalAlignment="Center"
             />
         <TextBlock
-            Text="{Binding DataContext.Tropas, ElementName=congo}"
+            Text="{Binding DataContext.Tropas, ElementName=south_africa}"
+            IsHitTestVisible="False"
             FontSize="16"
             FontWeight="Bold"
             Foreground="Black"
@@ -528,6 +563,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=madagascar}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -548,6 +584,7 @@
         />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=mongolia}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -567,6 +604,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=middle_east}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -586,6 +624,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=irkutsk}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -605,6 +644,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=china}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -624,6 +664,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=siberia}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -643,6 +684,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=ural}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -662,6 +704,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=afghanistan}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -682,6 +725,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=siam}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -701,6 +745,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=india}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -720,6 +765,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=kamchatka}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -739,6 +785,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=yakutsk}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -758,6 +805,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=japan}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -779,6 +827,7 @@
             />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=eastern_australia}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -798,6 +847,7 @@
         />
         <TextBlock
              Text="{Binding DataContext.Tropas, ElementName=indonesia}"
+            IsHitTestVisible="False"
              FontSize="16"
              FontWeight="Bold"
              Foreground="Black"
@@ -813,10 +863,11 @@
             Fill="{Binding color}"
             Stroke="Black" 
             StrokeThickness="1"
-            Data="M 862.4935,599.88536 L 862.72892,599.61589 C 862.72892,599.61589 862.72892,593.95904 862.9057,592.54482 C 863.08248,591.13061 862.55215,591.30739 861.84504,590.24673 C 861.13793,589.18607 862.72892,547.9971 862.55215,547.11321 C 862.37537,546.22933 832.67689,547.46677 832.67689,547.46677 L 832.08791,509.72925 L 829.96659,508.49181 C 829.96659,508.49181 828.3756,507.43115 827.49171,506.90082 C 826.60783,506.37049 825.90072,508.84536 825.19361,509.19892 C 824.48651,509.55247 822.36519,510.78991 822.36519,510.78991 C 822.36519,510.78991 821.83486,512.55767 821.4813,513.79511 C 821.12775,515.03255 819.53676,513.97189 817.59222,514.679 C 815.64767,515.3861 817.41544,515.3861 816.88511,517.15387 C 816.35478,518.92164 816.35478,517.33065 814.76379,517.33065 C 813.1728,517.33065 814.05668,518.03775 812.99602,519.45197 C 811.93536,520.86618 811.75859,519.80552 810.34437,521.04296 C 808.93016,522.28039 809.99082,522.28039 809.10694,524.04816 C 808.22305,525.81593 808.04628,524.93204 806.98562,525.63915 C 805.92495,526.34626 804.15719,528.11402 803.09653,529.17468 C 802.03587,530.23534 801.50554,529.70501 799.38422,529.52824 C 797.2629,529.35146 798.50033,529.52824 796.90934,529.70501 C 795.31835,529.88179 795.67191,530.94245 794.61125,531.82633 C 793.55059,532.71022 793.02026,533.06377 791.78282,534.30121 C 790.54538,535.53865 791.25249,534.83154 789.30795,535.00832 C 787.3634,535.18509 788.24729,535.18509 786.30274,536.42253 C 784.3582,537.65997 786.12597,538.01352 785.94919,539.42773 C 785.77241,540.84195 785.41886,540.84195 784.88853,542.07938 C 784.3582,543.31682 784.88853,543.67037 785.41886,545.08459 C 785.94919,546.4988 787.00985,545.61492 787.00985,545.61492 C 787.00985,545.61492 786.6563,547.73624 787.00985,548.44334 C 787.3634,549.15045 786.83307,548.44334 785.24208,548.44334 C 783.65109,548.44334 784.53497,548.97367 784.53497,550.21111 C 784.53497,551.44855 784.53497,551.44855 784.53497,551.44855 C 784.53497,551.44855 784.00464,551.62532 783.47431,552.68598 C 782.94398,553.74665 783.47431,553.56987 783.65109,554.80731 C 783.82787,556.04474 784.00464,556.57507 784.53497,557.81251 C 785.0653,559.04995 785.59563,558.69639 786.47952,560.64094 C 787.3634,562.58548 786.83307,562.76226 786.83307,564.53002 C 786.83307,566.29779 786.83307,565.76746 787.00985,568.06556 C 787.18663,570.36365 788.24729,569.65655 788.24729,569.65655 C 788.24729,569.65655 789.48472,570.54043 790.19183,571.07076 C 790.89894,571.60109 790.89894,572.13142 791.25249,573.89919 C 791.60604,575.66696 790.72216,575.3134 790.36861,576.37406 C 790.01505,577.43472 790.36861,577.08117 790.19183,579.20249 C 790.01505,581.32381 789.30795,580.43993 788.60084,581.32381 C 787.89373,582.20769 788.07051,582.20769 787.54018,583.62191 C 787.00985,585.03612 787.54018,584.68257 788.42406,585.38967 C 789.30795,586.09678 790.36861,586.62711 791.42927,587.51099 C 793.87008,590.1838 796.49259,589.50055 799.56099,587.86455 C 801.15198,586.98066 800.44488,586.80389 801.68231,586.27356 C 802.91975,585.74323 802.5662,585.92 803.2733,585.56645 C 803.98041,585.2129 804.51074,584.68257 805.5714,583.62191 C 806.63206,582.56125 805.92495,583.44513 807.16239,582.73802 C 808.39983,582.03092 808.57661,581.50059 810.52115,580.79348 C 812.46569,580.08637 812.99602,580.6167 812.99602,580.6167 C 812.99602,580.6167 812.99602,580.6167 814.58701,580.6167 C 816.178,580.6167 815.29412,580.79348 815.64767,581.50059 C 816.00123,582.20769 817.06189,582.20769 817.76899,582.20769 C 818.4761,582.20769 819.53676,582.03092 820.42064,581.67736 C 821.30453,581.32381 820.24387,580.08637 820.24387,579.37927 C 820.24387,578.67216 820.24387,578.49538 820.7742,577.25795 C 821.30453,576.02051 822.89552,575.66696 823.60262,575.66696 C 824.30973,575.66696 826.0775,575.3134 826.7846,574.6063 C 827.49171,573.89919 827.84527,574.25274 829.25948,574.07597 C 830.67369,573.89919 830.49692,573.54563 831.55758,572.48497 C 832.61824,571.42431 832.61824,571.95464 834.56278,571.95464 C 836.50732,571.95464 835.62344,571.95464 837.56798,571.95464 C 839.51253,571.95464 839.33575,572.13142 840.57319,572.3082 C 841.81062,572.48497 842.51773,573.72241 843.40161,574.25274 C 844.2855,574.78307 843.75517,574.95985 843.75517,576.37406 C 843.75517,577.78828 843.93194,577.96505 845.34616,580.43993 C 846.76037,582.9148 847.46748,582.9148 847.46748,582.9148 C 847.46748,582.9148 848.70492,581.14703 849.76558,579.55604 C 850.82624,577.96505 850.64946,579.02571 852.24045,578.49538 C 853.83144,577.96505 852.77078,577.43472 853.12433,575.13663 C 853.47789,572.83853 854.18499,574.42952 855.42243,574.6063 C 856.65987,574.78307 855.42243,576.90439 855.06888,578.14183 C 854.71532,579.37927 854.00822,579.73282 853.12433,580.6167 C 852.24045,581.50059 852.24045,581.67736 851.17979,582.9148 C 850.11913,584.15224 850.64946,583.97546 850.82624,585.38967 C 851.00301,586.80389 852.77078,584.15224 853.47789,583.09158 C 854.18499,582.03092 854.18499,582.73802 855.06888,582.9148 C 855.95276,583.09158 855.24565,585.2129 855.24565,586.27356 C 855.24565,587.33422 855.42243,587.15744 856.30631,587.68777 C 857.1902,588.2181 857.1902,589.27876 856.65987,590.69297 C 856.12954,592.10719 856.65987,592.10719 856.83664,593.16785 C 857.01342,594.22851 858.95796,596.88016 859.66507,597.58727 C 860.37218,598.29437 860.1954,597.94082 860.90251,598.29437 C 861.60961,598.64793 861.25606,599.00148 862.4935,599.88536 z" HorizontalAlignment="Left" Canvas.Left="68" VerticalAlignment="Center"
+            Data="M 862.4935,599.88536 L 862.72892,599.61589 C 862.72892,599.61589 862.72892,593.95904 862.9057,592.54482 C 863.08248,591.13061 862.55215,591.30739 861.84504,590.24673 C 861.13793,589.18607 862.72892,547.9971 862.55215,547.11321 C 862.37537,546.22933 832.67689,547.46677 832.67689,547.46677 L 832.08791,509.72925 L 829.96659,508.49181 C 829.96659,508.49181 828.3756,507.43115 827.49171,506.90082 C 826.60783,506.37049 825.90072,508.84536 825.19361,509.19892 C 824.48651,509.55247 822.36519,510.78991 822.36519,510.78991 C 822.36519,510.78991 821.83486,512.55767 821.4813,513.79511 C 821.12775,515.03255 819.53676,513.97189 817.59222,514.679 C 815.64767,515.3861 817.41544,515.3861 816.88511,517.15387 C 816.35478,518.92164 816.35478,517.33065 814.76379,517.33065 C 813.1728,517.33065 814.05668,518.03775 812.99602,519.45197 C 811.93536,520.86618 811.75859,519.80552 810.34437,521.04296 C 808.93016,522.28039 809.99082,522.28039 809.10694,524.04816 C 808.22305,525.81593 808.04628,524.93204 806.98562,525.63915 C 805.92495,526.34626 804.15719,528.11402 803.09653,529.17468 C 802.03587,530.23534 801.50554,529.70501 799.38422,529.52824 C 797.2629,529.35146 798.50033,529.52824 796.90934,529.70501 C 795.31835,529.88179 795.67191,530.94245 794.61125,531.82633 C 793.55059,532.71022 793.02026,533.06377 791.78282,534.30121 C 790.54538,535.53865 791.25249,534.83154 789.30795,535.00832 C 787.3634,535.18509 788.24729,535.18509 786.30274,536.42253 C 784.3582,537.65997 786.12597,538.01352 785.94919,539.42773 C 785.77241,540.84195 785.41886,540.84195 784.88853,542.07938 C 784.3582,543.31682 784.88853,543.67037 785.41886,545.08459 C 785.94919,546.4988 787.00985,545.61492 787.00985,545.61492 C 787.00985,545.61492 786.6563,547.73624 787.00985,548.44334 C 787.3634,549.15045 786.83307,548.44334 785.24208,548.44334 C 783.65109,548.44334 784.53497,548.97367 784.53497,550.21111 C 784.53497,551.44855 784.53497,551.44855 784.53497,551.44855 C 784.53497,551.44855 784.00464,551.62532 783.47431,552.68598 C 782.94398,553.74665 783.47431,553.56987 783.65109,554.80731 C 783.82787,556.04474 784.00464,556.57507 784.53497,557.81251 C 785.0653,559.04995 785.59563,558.69639 786.47952,560.64094 C 787.3634,562.58548 786.83307,562.76226 786.83307,564.53002 C 786.83307,566.29779 786.83307,565.76746 787.00985,568.06556 C 787.18663,570.36365 788.24729,569.65655 788.24729,569.65655 C 788.24729,569.65655 789.48472,570.54043 790.19183,571.07076 C 790.89894,571.60109 790.89894,572.13142 791.25249,573.89919 C 791.60604,575.66696 790.72216,575.3134 790.36861,576.37406 C 790.01505,577.43472 790.36861,577.08117 790.19183,579.20249 C 790.01505,581.32381 789.30795,580.43993 788.60084,581.32381 C 787.89373,582.20769 788.07051,582.20769 787.54018,583.62191 C 787.00985,585.03612 787.54018,584.68257 788.42406,585.38967 C 789.30795,586.09678 790.36861,586.62711 791.42927,587.51099 C 793.87008,590.1838 796.49259,589.50055 799.56099,587.86455 C 801.15198,586.98066 800.44488,586.80389 801.68231,586.27356 C 802.91975,585.74323 802.5662,585.92 803.2733,585.56645 C 803.98041,585.2129 804.51074,584.68257 805.5714,583.62191 C 806.63206,582.56125 805.92495,583.44513 807.16239,582.73802 C 808.39983,582.03092 808.57661,581.50059 810.52115,580.79348 C 812.46569,580.08637 812.99602,580.6167 812.99602,580.6167 C 812.99602,580.6167 812.99602,580.6167 814.58701,580.6167 C 816.178,580.6167 815.29412,580.79348 815.64767,581.50059 C 816.00123,582.20769 817.06189,582.20769 817.76899,582.20769 C 818.4761,582.20769 819.53676,582.03092 820.42064,581.67736 C 821.30453,581.32381 820.24387,580.08637 820.24387,579.37927 C 820.24387,578.67216 820.24387,578.49538 820.7742,577.25795 C 821.30453,576.02051 822.89552,575.66696 823.60262,575.66696 C 824.30973,575.66696 826.0775,575.3134 826.7846,574.6063 C 827.49171,573.89919 827.84527,574.25274 829.25948,574.07597 C 830.67369,573.89919 830.49692,573.54563 831.55758,572.48497 C 832.61824,571.42431 832.61824,571.95464 834.56278,571.95464 C 836.50732,571.95464 835.62344,571.95464 837.56798,571.95464 C 839.51253,571.95464 839.33575,572.13142 840.57319,572.3082 C 841.81062,572.48497 842.51773,573.72241 843.40161,574.25274 C 844.2855,574.78307 843.75517,574.95985 843.75517,576.37406 C 843.75517,577.78828 843.93194,577.96505 845.34616,580.43993 C 846.76037,582.9148 847.46748,582.9148 847.46748,582.9148 C 847.46748,582.9148 848.70492,581.14703 849.76558,579.55604 C 850.82624,577.96505 850.64946,579.02571 852.24045,578.49538 C 853.83144,577.96505 852.77078,577.43472 853.12433,575.13663 C 853.47789,572.83853 854.18499,574.42952 855.42243,574.6063 C 856.65987,574.78307 855.42243,576.90439 855.06888,578.14183 C 854.71532,579.37927 854.00822,579.73282 853.12433,580.6167 C 852.24045,581.50059 852.24045,581.67736 851.17979,582.9148 C 850.11913,584.15224 850.64946,583.97546 850.82624,585.38967 C 851.00301,586.80389 852.77078,584.15224 853.47789,583.09158 C 854.18499,582.03092 854.18499,582.73802 855.06888,582.9148 C 855.95276,583.09158 855.24565,585.2129 855.24565,586.27356 C 855.24565,587.33422 855.42243,587.15744 856.30631,587.68777 C 857.1902,588.2181 857.1902,589.27876 856.65987,590.69297 C 856.12954,592.10719 856.65987,592.10719 856.83664,593.16785 C 857.01342,594.22851 858.95796,596.88016 859.66507,597.58727 C 860.37218,598.29437 860.1954,597.94082 860.90251,598.29437 C 861.60961,598.64793 861.25606,599.00148 862.4935,599.88536 z" HorizontalAlignment="Center" Canvas.Left="68" VerticalAlignment="Center" Canvas.Top="2.158"
         />
         <TextBlock
               Text="{Binding DataContext.Tropas, ElementName=western_australia}"
+            IsHitTestVisible="False"
               FontSize="16"
               FontWeight="Bold"
               Foreground="Black"
@@ -836,6 +887,7 @@
             />
         <TextBlock
               Text="{Binding DataContext.Tropas, ElementName=new_guinea}"
+            IsHitTestVisible="False"
               FontSize="16"
               FontWeight="Bold"
               Foreground="Black"
@@ -1471,27 +1523,29 @@
             </Grid>
         </Border>
 
-        <Rectangle Height="397" Fill="AliceBlue" Stroke="Black" Canvas.Top="129" Width="241" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        <Rectangle Height="429" Fill="AliceBlue" Stroke="Black" Canvas.Top="129" Width="241" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <TextBlock x:Name="Cartas" FontSize="30" Canvas.Left="74" TextWrapping="Wrap"  Canvas.Top="141" HorizontalAlignment="Left" VerticalAlignment="Top"><Run Text="C"/><Run Language="es-cr" Text="artas"/></TextBlock>
 
-        <ItemsControl x:Name="CuadrosCartas" ItemsSource="{Binding Cartas}" Canvas.Left="39" Canvas.Top="188">
+        <ItemsControl x:Name="CuadrosCartas" ItemsSource="{Binding Cartas}" Canvas.Left="39" Canvas.Top="182">
+
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <UniformGrid Columns="2" Rows="3"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
+
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="1" Margin="5" Padding="5" Background="White">
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="5" Padding="5" Style="{StaticResource CartaStyle}" MouseLeftButtonDown="Carta_ClickIzquierdo">
                         <StackPanel>
                             <TextBlock Text="{Binding TerritorioAsociado}" FontWeight="Bold" FontSize="14" Width="60" Height="20"/>
                             <TextBlock Text="{Binding Tipo}" FontStyle="Italic"/>
-                            <!-- Si tu carta tiene imagen -->
                             <Image Source="{Binding RutaImagen}" Height="50" Width="50"/>
                         </StackPanel>
                     </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
+
         </ItemsControl>
 
         <Border 
@@ -1499,7 +1553,7 @@
             Height="94" 
             BorderBrush="Black" 
             BorderThickness="1" 
-            Background="AliceBlue" Canvas.Top="525" HorizontalAlignment="Center" VerticalAlignment="Top">
+            Background="AliceBlue" Canvas.Top="558" HorizontalAlignment="Center" VerticalAlignment="Top">
 
             <TextBlock 
                 x:Name="TextoGuía"
@@ -1512,6 +1566,7 @@
                 FontSize="15"/>
 
         </Border>
-        <Button Content="Terminar Fase" FontSize="14" Canvas.Top="624" Height="58" Width="241" HorizontalAlignment="Center" VerticalAlignment="Top" Click="avanzarFase_Click"/>
+        <Button Content="Terminar Fase" FontSize="14" Canvas.Top="622" Height="58" Width="242" HorizontalAlignment="Left" VerticalAlignment="Top" Click="avanzarFase_Click" Canvas.Left="516"/>
+        <Button Content="Intercambiar" FontSize="14" Canvas.Top="515" Height="30" Width="162" Click="IntecambiarCartas_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Canvas.Left="37"/>
     </Canvas>
 </Page>

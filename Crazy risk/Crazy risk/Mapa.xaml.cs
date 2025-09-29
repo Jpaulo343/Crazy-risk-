@@ -89,9 +89,31 @@ namespace Crazy_risk
         
         }
 
+        private void Carta_ClickIzquierdo(object sender, MouseButtonEventArgs e)
+        {
+
+
+            if (CondiciónParaJugar())
+            {
+                var borderCarta = sender as Border;
+                if (borderCarta == null) return;
+                Carta? cartaClickeada = borderCarta.DataContext as Carta;
+
+                Debug.WriteLine("Carta clickeada");
+                Debug.WriteLine(cartaClickeada);
+                juego.seleccionarCartas(cartaClickeada!);
+            }
+        }
+
+        /*
+         Esta función verifica si el jugador local es el jugador actual y si es su turno para jugar.
+         Retorna true si el jugador local puede jugar, de lo contrario retorna false.
+         */
         private bool CondiciónParaJugar()
         {
-            return (jugadorLocal == juego.ObtenerJugadorActual().Nombre);
+
+            return true;
+            //return (jugadorLocal == juego.ObtenerJugadorActual().Nombre);
         }
         private void avanzarFase_Click(object sender, RoutedEventArgs e)
         {
@@ -99,6 +121,14 @@ namespace Crazy_risk
             {
                 juego.AvanzarFase();
                 actualizarInterfaz();
+            }
+        }
+
+        private void IntecambiarCartas_Click(object sender, RoutedEventArgs e)
+        {
+            if (CondiciónParaJugar())
+            {
+                juego.IntercambiarCartas();
             }
         }
 

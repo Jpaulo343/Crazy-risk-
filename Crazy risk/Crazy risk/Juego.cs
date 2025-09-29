@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -34,13 +36,13 @@ namespace Crazy_risk
             DiccionarioColor_Nombre.registrar("Neutral", colores.Seleccionar_Y_Eliminar_Random());
 
             ListaEnlazada<string> territorios1 = new ListaEnlazada<string>();
-            Jugador jugador1 = new Jugador(NombreJugador1, DiccionarioColor_Nombre.obtener(NombreJugador1), 1, territorios1, 40);
+            Jugador jugador1 = new Jugador(NombreJugador1, DiccionarioColor_Nombre.obtener(NombreJugador1), 1, territorios1, 26);
 
             ListaEnlazada<string> territorios2 = new ListaEnlazada<string>();
-            Jugador jugador2 = new Jugador(NombreJugador2, DiccionarioColor_Nombre.obtener(NombreJugador2), 1, territorios2, 40);
+            Jugador jugador2 = new Jugador(NombreJugador2, DiccionarioColor_Nombre.obtener(NombreJugador2), 1, territorios2, 26);
 
             ListaEnlazada<string> territorios3 = new ListaEnlazada<string>();
-            Jugador jugador3 = new Jugador("Neutral", DiccionarioColor_Nombre.obtener("Neutral"), 1, territorios3, 40);
+            Jugador jugador3 = new Jugador("Neutral", DiccionarioColor_Nombre.obtener("Neutral"), 1, territorios3, 26);
 
             ListaEnlazada<Jugador> jugadores = new ListaEnlazada<Jugador>();
             //El orden de inserción es importante, ya que el jugador en el indice 0 será el primero en jugar
@@ -128,27 +130,11 @@ namespace Crazy_risk
             jugadorActivo = (jugadorActivo + 1) % 2;
         }
 
-        //Activa la ronda inicial, en la cual los jugadores se turnan para colocar sus tropas iniciales
-        public void FinalizarRondaInicial()
-        {
-            rondaInicial = false;
-        }
-
-        public void selecionarTerritorio(Territorio territorio)
-        {
-            territorio!.EstaSeleccionado = !territorio.EstaSeleccionado;
-        }
-
         //Devuelve el jugador que tiene el turno actual
         public Jugador ObtenerJugadorActual() 
         {
          return listaJugadores.ObtenerEnIndice(jugadorActivo);
         }
-        public void IncrementarContadorFibonacciCartas()
-        {
-            contadorFibonacciCartas++;
-        }
-
         public bool AñadirTropas(Territorio territorio) 
         {
             Jugador jugador= ObtenerJugadorActual();
@@ -167,9 +153,12 @@ namespace Crazy_risk
             }
             return false;
         }
+
+        //Avanza a la siguiente fase del juego
         public void AvanzarFase() 
         {
-            if (rondaInicial) 
+
+            if (rondaInicial)
             {
                 if (jugadorActivo == 1)
                 {
@@ -177,24 +166,155 @@ namespace Crazy_risk
                     rondaInicial = false;
                 }
                 cambiarTurno();
+                calcularTropasRefuerzo(ObtenerJugadorActual());
             }
+            else 
+            {
+                Jugador jugador = ObtenerJugadorActual();
+                jugador.Fase++;
+                if (jugador.Fase > 3)
+                {   
+                    jugador.Fase = 1;
+                    if (jugadorActivo == 1)
+                    {
+                        calcularTropasRefuerzo(listaJugadores.ObtenerEnIndice(2)); //el bot recibe tropas de refuerzo y las reparte entre sus territorios
+                        repartirtropasBot();
+                    }
+                    cambiarTurno();
+                    calcularTropasRefuerzo(ObtenerJugadorActual());
+                }
+            }
+        }
+
+
+        private void calcularTropasRefuerzo(Jugador jugador) 
+        {
+            jugador.AgregarTropas((jugador.territorios_Conquistados.size / 3) + CalcularBonusContinentes(jugador));
 
         }
 
-       public void deseleccionarTerritorios() 
-       {
+        private int CalcularBonusContinentes(Jugador jugador) 
+        {
+            int tropasBonus = 0;
+            for (int i = 0; i <= 5; i++) 
+            {
+
+               if (listaTerritorios.Enumerar().All(t => t.Continente == i && t.Conquistador == jugador.Nombre))
+               {
+                    if (i == 1 || i == 5)
+                    {
+                        tropasBonus += 2;
+                    }
+                    else if (i == 0 || i == 3)
+                    {
+                        tropasBonus += 3;
+                    }
+                    else 
+                    {
+                        tropasBonus += 3 + i;
+                    }
+               }
+                    break;
+            }
+            return tropasBonus;
+        }
+
+
+
+        public void selecionarTerritorio(Territorio territorio)
+        {
+            territorio!.EstaSeleccionado = !territorio.EstaSeleccionado;
+        }
+
+        //Cambia el estado de todos los territorios a no seleccionados
+        public void deseleccionarTerritorios() 
+        {
         foreach (var territorio in listaTerritorios.Enumerar())
             {
                 territorio.EstaSeleccionado = false;
             }
         }
 
+        public void seleccionarCartas(Carta carta)
+        {
+            int contadorCartasSeleccionadas = 0;
+            foreach (var c in ObtenerJugadorActual().Cartas)
+            {
+                if (c.Seleccionada) contadorCartasSeleccionadas++;
+                if (contadorCartasSeleccionadas >= 3 && !carta.Seleccionada) return;
+            }
+            carta.Seleccionada = !carta.Seleccionada;
+        }
+        public void deseleccionarCartas()
+        {
+            foreach (var carta in ObtenerJugadorActual().Cartas)
+            {
+                carta.Seleccionada = false;
+            }
+        }
+
+
+        //Verifica que la cantidad de cartas seleccionadas sea 3, luego verifica que sean del mismo tipo o de tipos diferntes entre ellos,
+        //si cualquiera de las condiciónes se cumple, cambia las 3 cartas por tropas para el jugador
+        public void IntercambiarCartas()
+        {
+            Jugador jugador = ObtenerJugadorActual();
+            ListaEnlazada<Carta> cartasACanjear = new ListaEnlazada<Carta>();
+            foreach (var carta in jugador.Cartas)
+            {
+                if (carta.Seleccionada) cartasACanjear.Añadir(carta);
+            }
+            if (cartasACanjear.size == 3)
+            {
+                TipoCarta tipo1 = cartasACanjear.Head.Value.Tipo;
+                TipoCarta tipo2 = cartasACanjear.Head.Next.Value.Tipo;
+                TipoCarta tipo3 = cartasACanjear.Head.Next.Next.Value.Tipo;
+
+                bool tresIguales = (tipo1 == tipo2 && tipo2 == tipo3);
+                bool tresDistintos = (tipo1 != tipo2 && tipo2 != tipo3 && tipo1 != tipo3);
+                if (tresIguales || tresDistintos)
+                {
+                    jugador.TropasDisponibles += calcularPosiciónFibonacci();
+                    deseleccionarCartas();
+                    foreach (Carta carta in cartasACanjear.Enumerar())
+                    {
+                        jugador.Cartas.Remove(carta);
+                    }
+                    IncrementarContadorFibonacciCartas();
+
+                }
+            }
+        }
+
+
+        //Calcula el numero en x posición en la suceccion de fibonacci
+        private int calcularPosiciónFibonacci()
+        {
+            int val1 = 1;
+            int val2 = 1;
+            int res;
+
+            for (int i = 0; i < contadorFibonacciCartas; i++) 
+            {
+                res = val1 + val2;
+                val1 = val2;
+                val2 = res;
+            }
+            return val2;
+        }
+
+        public void IncrementarContadorFibonacciCartas()
+        {
+            contadorFibonacciCartas++;
+        }
+
+
+        //Reparte las tropas del bot de manera aleatoria entre sus territorios conquistados
         public void repartirtropasBot()
         {
             Jugador bot = listaJugadores.ObtenerEnIndice(2);
             while (bot.TropasDisponibles > 0)
             {
-                // Fix: Get the territory name, then find the Territorio object in listaTerritorios
                 string territorioNombre = bot.territorios_Conquistados.ObtenerEnIndice(generadorAleatorio.Next(0, bot.territorios_Conquistados.size));
                 Territorio territorio = listaTerritorios.BuscarPorCondición(t => t.Nombre == territorioNombre)!;
                 if (territorio != null)
@@ -204,7 +324,6 @@ namespace Crazy_risk
                 }
                 else
                 {
-                    // If not found, just decrement to avoid infinite loop
                     bot.TropasDisponibles--;
                 }
             }
