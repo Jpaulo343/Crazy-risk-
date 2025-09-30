@@ -93,6 +93,12 @@ namespace Crazy_risk
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public bool verificarTerritorio(Territorio t) 
+        {
+            return territorios_Conquistados.Buscar(t.Nombre);
+        }
+
     }
 
 
