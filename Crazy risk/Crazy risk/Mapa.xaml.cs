@@ -202,6 +202,7 @@ namespace Crazy_risk
         {
             if (CondiciónParaJugar())
             {
+                if (juego.origenSeleccionado.Tropas < 2) return;
                 int cantidad = (int)CantidadSlider.Value;
                 juego.TransferenciaTropas(cantidad);
                 TrasnefirTopasPopup.IsOpen = false;
