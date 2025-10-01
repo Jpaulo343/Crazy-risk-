@@ -19,12 +19,85 @@ namespace Crazy_risk
         public int contadorFibonacciCartas { get; private set; }
         public Random generadorAleatorio { get; private set; }
         public bool rondaInicial { get; private set; }
-        public int jugadorActivo { get; private set; } //Puede ser 0 o 1, es el indice de la lista "jugadores"
+        public int jugadorActivo { get; private set; } 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
-        public Territorio origenSeleccionado { get; private set; }
-        public Territorio destinoSeleccionado { get; private set; }
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 
-        //Constructor del juego, recibe los nombres de los dos jugadores
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
+
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
+=======
+
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
+
+>>>>>>> Stashed changes
+=======
+
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
+
+>>>>>>> Stashed changes
+
+>>>>>>> Stashed changes
+=======
+<<<<<<< Updated upstream
+
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
+
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
+=======
+
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
+
+>>>>>>> Stashed changes
+=======
+
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
+
+>>>>>>> Stashed changes
+
+>>>>>>> Stashed changes
+=======
+
+<<<<<<< Updated upstream
+
+=======
+>>>>>>> Stashed changes
+=======
+
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
+
+>>>>>>> Stashed changes
+=======
+
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
+
+>>>>>>> Stashed changes
+
+>>>>>>> Stashed changes
         public Juego(string NombreJugador1,string NombreJugador2)
         {
             ListaEnlazada<Brush> colores = new ListaEnlazada<Brush>();
@@ -46,7 +119,7 @@ namespace Crazy_risk
             Jugador jugador3 = new Jugador("Neutral", DiccionarioColor_Nombre.obtener("Neutral"), 1, territorios3, 26);
 
             ListaEnlazada<Jugador> jugadores = new ListaEnlazada<Jugador>();
-            //El orden de inserción es importante, ya que el jugador en el indice 0 será el primero en jugar
+
             jugadores.Añadir(jugador3);
             jugadores.Añadir(jugador2);
             jugadores.Añadir(jugador1);
@@ -125,7 +198,130 @@ namespace Crazy_risk
             return generadorAleatorio.Next(1, 7);
         }
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+        //Cambia el turno al siguiente jugador
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+        private bool SonAdyacentes(Territorio a, Territorio b)
+        {
+            return a.Adyacentes.Buscar(b.Nombre);
+        }
+
+        public bool PuedeAtacarDesde(Territorio origen)
+        {
+            var j = ObtenerJugadorActual();
+            return origen != null
+                   && origen.Conquistador == j.Nombre
+                   && origen.Tropas >= 2;
+        }
+
+        public bool PuedeAtacarA(Territorio origen, Territorio destino)
+        {
+            var j = ObtenerJugadorActual();
+            return destino != null
+                   && destino.Conquistador != j.Nombre
+                   && SonAdyacentes(origen, destino);
+        }
+
+        private static void OrdenarDesc(List<int> v) => v.Sort((x, y) => y.CompareTo(x));
+
+        private (int perdidasAtq, int perdidasDef, List<int> tiradaAtq, List<int> tiradaDef)
+        ResolverTirada(int dadosAtq, int dadosDef)
+        {
+            var tiradaAtq = new List<int>(dadosAtq);
+            var tiradaDef = new List<int>(dadosDef);
+            for (int i = 0; i < dadosAtq; i++) tiradaAtq.Add(LanzarDado());
+            for (int i = 0; i < dadosDef; i++) tiradaDef.Add(LanzarDado());
+            OrdenarDesc(tiradaAtq);
+            OrdenarDesc(tiradaDef);
+
+            int comps = Math.Min(tiradaAtq.Count, tiradaDef.Count);
+            int perdAtq = 0, perdDef = 0;
+            for (int i = 0; i < comps; i++)
+            {
+                if (tiradaAtq[i] > tiradaDef[i]) perdDef++;
+                else perdAtq++;
+            }
+            return (perdAtq, perdDef, tiradaAtq, tiradaDef);
+        }
+
+        public (string resumen, bool conquistado) AtacarUnaVez()
+        {
+            if (origenSeleccionado == null || destinoSeleccionado == null)
+                return ("Selecciona origen (tuyo) y destino (enemigo adyacente).", false);
+
+            if (!PuedeAtacarDesde(origenSeleccionado))
+                return ($"No puedes atacar desde {origenSeleccionado.Nombre}: requiere ≥2 tropas y ser tuyo.", false);
+            if (!PuedeAtacarA(origenSeleccionado, destinoSeleccionado))
+                return ($"{destinoSeleccionado.Nombre} no es enemigo adyacente a {origenSeleccionado.Nombre}.", false);
+
+            int dadosAtq = Math.Min(3, origenSeleccionado.Tropas - 1);
+            int dadosDef = Math.Min(2, destinoSeleccionado.Tropas);
+            if (dadosAtq <= 0 || dadosDef <= 0)
+                return ("No hay dados válidos para atacar o defender.", false);
+
+            var (perdAtq, perdDef, tirAtq, tirDef) = ResolverTirada(dadosAtq, dadosDef);
+
+            origenSeleccionado.Tropas -= perdAtq;
+            destinoSeleccionado.Tropas -= perdDef;
+
+            bool conquista = destinoSeleccionado.Tropas == 0;
+            if (conquista)
+            {
+                int aMover = Math.Min(dadosAtq, origenSeleccionado.Tropas - 1);
+                if (aMover < 1) aMover = 1;
+
+                string defensorPrevio = destinoSeleccionado.Conquistador;
+                var atacante = ObtenerJugadorActual();
+                var defensor = listaJugadores.BuscarPorCondición(j => j.Nombre == defensorPrevio);
+
+                defensor?.PerderTerritorio(destinoSeleccionado.Nombre);
+                atacante.territorios_Conquistados.Añadir(destinoSeleccionado.Nombre);
+                destinoSeleccionado.Conquistador = atacante.Nombre;
+
+                destinoSeleccionado.Tropas = 0;
+                origenSeleccionado.Tropas -= aMover;
+                destinoSeleccionado.Tropas += aMover;
+
+            }
+
+            string resumen = $"Atq [{string.Join(",", tirAtq)}] vs Def [{string.Join(",", tirDef)}]  " +
+                             $"=> pérdidas A:{perdAtq} D:{perdDef}" +
+                             (conquista ? $"  | ¡Conquistado {destinoSeleccionado.Nombre}!" : "");
+            return (resumen, conquista);
+        }
+
         /*Cambia el turno al siguiente jugador*/
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         public void cambiarTurno()
         {
             jugadorActivo = (jugadorActivo + 1) % 2;
@@ -149,7 +345,6 @@ namespace Crazy_risk
                 territorio.AgregarTropas(1);
                 jugador.TropasDisponibles--;
 
-                // Si ya no tiene tropas, pasa turno
                 if (jugador.TropasDisponibles == 0 && rondaInicial)
                 {
 
@@ -176,6 +371,17 @@ namespace Crazy_risk
                 cambiarTurno();
                 calcularTropasRefuerzo(ObtenerJugadorActual());
             }
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
             else 
             {
                 Jugador jugador = ObtenerJugadorActual();
@@ -188,14 +394,14 @@ namespace Crazy_risk
                     {
                         origenSeleccionado.EstaSeleccionado = false;
                         destinoSeleccionado.EstaSeleccionado = false;
-                        origenSeleccionado = null!;
-                        destinoSeleccionado = null!;
+                        origenSeleccionado = null;
+                        destinoSeleccionado = null;
                     }
 
                     jugador.Fase = 1;
                     if (jugadorActivo == 1)
                     {
-                        calcularTropasRefuerzo(listaJugadores.ObtenerEnIndice(2)); //el bot recibe tropas de refuerzo y las reparte entre sus territorios
+                        calcularTropasRefuerzo(listaJugadores.ObtenerEnIndice(2)); 
                         repartirtropasBot();
                     }
                     cambiarTurno();
@@ -208,6 +414,16 @@ namespace Crazy_risk
         private void calcularTropasRefuerzo(Jugador jugador) 
         {
             jugador.AgregarTropas((jugador.territorios_Conquistados.size / 3) + CalcularBonusContinentes(jugador));
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
         }
 
@@ -255,6 +471,17 @@ namespace Crazy_risk
             }
         }
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         /*Permite seleccionar o deseleccionar una carta, siempre y cuando no se hayan seleccionado ya 3 cartas
          */
         public void seleccionarCartas(Carta carta)
@@ -313,7 +540,6 @@ namespace Crazy_risk
         }
 
 
-        //Calcula el numero en x posición en la suceccion de fibonacci
         private int calcularPosiciónFibonacci()
         {
             int val1 = 1;
@@ -335,7 +561,28 @@ namespace Crazy_risk
         }
 
 
-        //Reparte las tropas del bot de manera aleatoria entre sus territorios conquistados
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         public void repartirtropasBot()
         {
             Jugador bot = listaJugadores.ObtenerEnIndice(2);
@@ -354,6 +601,17 @@ namespace Crazy_risk
                 }
             }
         }
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
         /* Asigna el territorio origen seleccionado, siempre y cuando no sea el mismo que el destino
          * y siempre y cuando el territorio origen pertenezca al jugador actual
@@ -405,19 +663,24 @@ namespace Crazy_risk
         
         internal bool verificarTransferenciaPosible(int cantidad) 
         {
-            return (origenSeleccionado.Tropas > cantidad);
+            return origenSeleccionado != null
+                && cantidad >= 1
+                && cantidad < origenSeleccionado.Tropas; 
         }
-        internal void cancelarTrasnferencia() 
-        {
-            destinoSeleccionado.EstaSeleccionado = false;
-            destinoSeleccionado = null;
-            origenSeleccionado.EstaSeleccionado = false;
-            origenSeleccionado = null;
-        }
+         internal void cancelarTrasnferencia()
+         {
+             if (destinoSeleccionado != null)
+                 destinoSeleccionado.EstaSeleccionado = false;
+             destinoSeleccionado = null;
+
+             if (origenSeleccionado != null)
+                 origenSeleccionado.EstaSeleccionado = false;
+             origenSeleccionado = null;
+         }
 
         public bool verificarOrigenValido() 
         {
-            return (origenSeleccionado.Tropas>1);
+            return origenSeleccionado != null && origenSeleccionado.Tropas >= 2;
         }
 
         /* Transfiere la cantidad de tropas especificada desde el territorio origen al territorio destino
@@ -437,6 +700,70 @@ namespace Crazy_risk
             }
 
         }
+        public bool AsignarDestinoAtaque(Territorio t)
+        {
+            if (origenSeleccionado == null) return false;
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
 
+            if (!PuedeAtacarA(origenSeleccionado, t)) return false;
+
+            if (destinoSeleccionado != null)
+                destinoSeleccionado.EstaSeleccionado = false;
+
+            t.EstaSeleccionado = true;
+            destinoSeleccionado = t;
+            return true;
+        }
+>>>>>>> Stashed changes
+
+            if (!PuedeAtacarA(origenSeleccionado, t)) return false;
+
+            if (destinoSeleccionado != null)
+                destinoSeleccionado.EstaSeleccionado = false;
+
+            t.EstaSeleccionado = true;
+            destinoSeleccionado = t;
+            return true;
+        }
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+
+            if (!PuedeAtacarA(origenSeleccionado, t)) return false;
+
+            if (destinoSeleccionado != null)
+                destinoSeleccionado.EstaSeleccionado = false;
+
+            t.EstaSeleccionado = true;
+            destinoSeleccionado = t;
+            return true;
+        }
+
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     }
 }
