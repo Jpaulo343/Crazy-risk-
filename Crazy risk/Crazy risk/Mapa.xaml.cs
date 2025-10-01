@@ -35,12 +35,15 @@ namespace Crazy_risk
             NombreJugadorText1.Text = juego.listaJugadores.ObtenerEnIndice(0).Nombre;
             NombreJugadorText2.Text = juego.listaJugadores.ObtenerEnIndice(1).Nombre;
             NombreJugadorText3.Text = juego.listaJugadores.ObtenerEnIndice(2).Nombre;
+
             ColorJugador1.Fill = juego.listaJugadores.ObtenerEnIndice(0).Color;
             ColorJugador2.Fill = juego.listaJugadores.ObtenerEnIndice(1).Color;
             ColorJugador3.Fill = juego.listaJugadores.ObtenerEnIndice(2).Color;
+
             PanelEstado.DataContext = juego.ObtenerJugadorActual();
             CuadrosCartas.DataContext = juego.ObtenerJugadorActual();
             BtnTransferir.DataContext = juego.ObtenerJugadorActual();
+
             foreach (var t in juego.listaTerritorios.Enumerar())
             {
                 System.Windows.Shapes.Path pathObjeto = this.FindName(t.Nombre) as System.Windows.Shapes.Path;
@@ -49,13 +52,6 @@ namespace Crazy_risk
                     pathObjeto.DataContext = t;
                 }
             }
-
-            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Infanteria, "alaasdsadasdasska"));
-            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Caballeria, "japon"));
-            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Caballeria, "camerun"));
-            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Artilleria, "westUs"));
-            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Caballeria, "brasil"));
-            juego.ObtenerJugadorActual().AgregarCarta(new Carta(TipoCarta.Caballeria, "peru"));
             actualizarTextoGuia();
 
         }
@@ -69,33 +65,77 @@ namespace Crazy_risk
          */
         private void Territorio_ClickIzquierdo(object sender, MouseButtonEventArgs e)
         {
-            if (CondiciónParaJugar())
+            if (!CondiciónParaJugar()) return;
+            
+            var pathClickeado = sender as System.Windows.Shapes.Path;
+            if (pathClickeado == null) return;
+
+            Territorio? territorioClickeado = pathClickeado.DataContext as Territorio;
+            bool jugadorCambiado = false;
+            int faseActual = juego.ObtenerJugadorActual().Fase;
+            Jugador jugador = juego.ObtenerJugadorActual();
+
+            if (juego.rondaInicial || faseActual == 1)
             {
-                var pathClickeado = sender as System.Windows.Shapes.Path;
-                if (pathClickeado == null) return;
-
-                Territorio? territorioClickeado = pathClickeado.DataContext as Territorio;
-                bool jugadorCambiado = false;
-                int faseActual = juego.ObtenerJugadorActual().Fase;
-                if (juego.rondaInicial || faseActual == 1)
+                jugadorCambiado = juego.AñadirTropas(territorioClickeado!);
+            }
+            if (faseActual == 2)
+            {
+                if (juego.origenSeleccionado == null)
                 {
-                    jugadorCambiado = juego.AñadirTropas(territorioClickeado!);
-                }
-
-                if (faseActual == 3)
-                {
+                    if (!jugador.verificarTerritorio(territorioClickeado) || territorioClickeado.Tropas < 2)
+                    {
+                        MessageBox.Show("Elige un territorio TUYO con al menos 2 tropas para atacar.");
+                        return;
+                    }
                     juego.AsignarOrigenSeleccionado(territorioClickeado);
                     return;
                 }
-                else juego.deseleccionarTerritorios();
-                
-                
-                juego.selecionarTerritorio(territorioClickeado!);
-                if (jugadorCambiado)
+
+                if (jugador.verificarTerritorio(territorioClickeado))
                 {
-                    actualizarInterfaz();
+                    if (territorioClickeado.Tropas < 2)
+                    {
+                        MessageBox.Show("Ese territorio no tiene suficientes tropas (≥2).");
+                        return;
+                    }
+                    juego.AsignarOrigenSeleccionado(territorioClickeado);
+                    return;
                 }
+
+                if (!juego.AsignarDestinoAtaque(territorioClickeado))
+                {
+                    MessageBox.Show("El destino debe ser ENEMIGO y ADYACENTE al origen seleccionado.");
+                    return;
+                }
+
+                var (resumen, conquistado) = juego.AtacarUnaVez();
+                MessageBox.Show(resumen);
+
+                if (juego.origenSeleccionado == null || juego.origenSeleccionado.Tropas < 2)
+                    juego.cancelarTrasnferencia();
+
+                verificarFinJuego();
+                actualizarInterfaz();
+                return;
             }
+
+
+
+            if (faseActual == 3)
+            {
+                juego.AsignarOrigenSeleccionado(territorioClickeado);
+                return;
+            }
+            else juego.deseleccionarTerritorios();
+                
+                
+            juego.selecionarTerritorio(territorioClickeado!);
+            if (jugadorCambiado)
+            {
+                actualizarInterfaz();
+            }
+            
         }
 
         /*
@@ -105,21 +145,57 @@ namespace Crazy_risk
          */
         private void Territorio_ClickDerecho(object sender, MouseButtonEventArgs e)
         {
-            if (CondiciónParaJugar())
-            {
+            if (!CondiciónParaJugar()) return;
 
-                if (juego.ObtenerJugadorActual().Fase == 3)
+            var pathClickeado = sender as System.Windows.Shapes.Path;
+            if (pathClickeado == null) return;
+            Territorio? territorioClickeado = pathClickeado.DataContext as Territorio;
+            int fase = juego.ObtenerJugadorActual().Fase;
+
+            if (fase == 2)
+            {
+                if (juego.origenSeleccionado == null)
                 {
-                    var pathClickeado = sender as System.Windows.Shapes.Path;
-                    if (pathClickeado == null) return;
-                    Territorio? territorioClickeado = pathClickeado.DataContext as Territorio;
-                    if (territorioClickeado == juego.origenSeleccionado) return;
-                    juego.AsignarDestinoSeleccionado(territorioClickeado!);
+                    MessageBox.Show("Primero elige el ORIGEN (click izquierdo sobre uno tuyo con ≥2 tropas).");
                     return;
                 }
 
+                if (!juego.AsignarDestinoAtaque(territorioClickeado))
+                {
+                    MessageBox.Show("El destino debe ser ENEMIGO y ADYACENTE al origen seleccionado.");
+                    return;
+                }
+
+                var (resumen, conquistado) = juego.AtacarUnaVez();
+                MessageBox.Show(resumen);
+
+                if (juego.origenSeleccionado == null || juego.origenSeleccionado.Tropas < 2)
+                    juego.cancelarTrasnferencia();
+                verificarFinJuego();
+
+                actualizarInterfaz();
+                return;
+            }
+
+            if (fase == 3)
+            {
+                if (territorioClickeado == juego.origenSeleccionado) return;
+                juego.AsignarDestinoSeleccionado(territorioClickeado!);
+                return;
+            }
+
+        }
+
+      private void verificarFinJuego()
+        {
+            Jugador ganador = juego.VerificarVictoria();
+            if (ganador != null)
+            {
+                MessageBox.Show($"¡El ganador es {ganador.Nombre}!");
+                Application.Current.Shutdown();
             }
         }
+
 
         /*
          Esta función maneja el evento de click izquierdo en una carta.
@@ -127,14 +203,13 @@ namespace Crazy_risk
          */
         private void Carta_ClickIzquierdo(object sender, MouseButtonEventArgs e)
         {
-            if (CondiciónParaJugar())
-            {
-                var borderCarta = sender as Border;
-                if (borderCarta == null) return;
-                Carta? cartaClickeada = borderCarta.DataContext as Carta;
+            if (!CondiciónParaJugar()) return;
+            var borderCarta = sender as Border;
+            if (borderCarta == null) return;
+            Carta? cartaClickeada = borderCarta.DataContext as Carta;
 
-                juego.seleccionarCartas(cartaClickeada!);
-            }
+            juego.seleccionarCartas(cartaClickeada!);
+
         }
 
         /*
@@ -153,11 +228,10 @@ namespace Crazy_risk
          */
         private void avanzarFase_Click(object sender, RoutedEventArgs e)
         {
-            if (CondiciónParaJugar())
-            {
-                juego.AvanzarFase();
-                actualizarInterfaz();
-            }
+            if (!CondiciónParaJugar()) return;
+            juego.AvanzarFase();
+            actualizarInterfaz();
+            
         }
 
         /* Esta función maneja el evento de click en el botón de intercambiar cartas.
@@ -165,17 +239,15 @@ namespace Crazy_risk
          */
         private void IntecambiarCartas_Click(object sender, RoutedEventArgs e)
         {
-            if (CondiciónParaJugar())
+            if (!CondiciónParaJugar()) return;
+            bool completado=juego.IntercambiarCartas();
+            if (!completado)
             {
-                bool completado=juego.IntercambiarCartas();
-                if (!completado)
-                {
-                    MessageBox.Show("Debes seleccionar 3 cartas para intercambiar");
-                }
-                else 
-                {
-                    MessageBox.Show("Intercambio completado, has recibido tropas");
-                }
+                MessageBox.Show("Debes seleccionar 3 cartas para intercambiar");
+            }
+            else 
+            {
+                MessageBox.Show("Intercambio completado, has recibido tropas");
             }
         }
 
@@ -200,13 +272,22 @@ namespace Crazy_risk
          */
         private void ConfirmarTransferencia_Click(object sender, RoutedEventArgs e)
         {
-            if (CondiciónParaJugar())
+            if (!CondiciónParaJugar()) return;
+
+            if (juego.origenSeleccionado.Tropas < 2) return;
+            int cantidad = (int)CantidadSlider.Value;
+            bool completado = juego.TransferenciaTropas(cantidad);
+            if (completado) 
             {
-                if (juego.origenSeleccionado.Tropas < 2) return;
-                int cantidad = (int)CantidadSlider.Value;
-                juego.TransferenciaTropas(cantidad);
-                TrasnefirTopasPopup.IsOpen = false;
+                MessageBox.Show("Se han transferido "+cantidad+" tropas");
+                juego.AvanzarFase();
+                actualizarInterfaz();
             }
+            else
+            {
+                MessageBox.Show("No se ha podido completar la transferencia, los territorios no estan conectados");
+            }
+            TrasnefirTopasPopup.IsOpen = false;
         }
 
         /* Esta función maneja el evento de click en el botón de cancelar transferencia de tropas.
@@ -214,12 +295,10 @@ namespace Crazy_risk
          */
         private void CancelarTransferencia_Click(object sender, RoutedEventArgs e)
         {
-            if (CondiciónParaJugar())
-            {
-                juego.cancelarTrasnferencia();
+            if (!CondiciónParaJugar()) return;
 
-                TrasnefirTopasPopup.IsOpen = false;
-            }
+            juego.cancelarTrasnferencia();
+            TrasnefirTopasPopup.IsOpen = false;
         }
 
 
@@ -227,12 +306,14 @@ namespace Crazy_risk
          * verifica que se hayan seleccionado dos territorios para hacer que aparezca un popup que permite trasnferir las tropas*/
         private void BtnTransferir_Click(object sender, RoutedEventArgs e)
         {
+            if (!CondiciónParaJugar()) return;
+
             if (juego.origenSeleccionado == null || juego.destinoSeleccionado == null)
             {
                 MessageBox.Show("Debes seleccionar un territorio de origen (izq click) y uno de destino (der click).");
                 return;
             }
-            if(juego.verificarOrigenValido())
+            if(!juego.verificarOrigenValido())
             {
                 MessageBox.Show("Debes seleccionar un territorio de origen que tenga almenos dos tropas");
                 return;

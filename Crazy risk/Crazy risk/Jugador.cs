@@ -14,7 +14,7 @@ namespace Crazy_risk
     public class Jugador : INotifyPropertyChanged
     {
 
-        
+
         public string Nombre { get; private set; }
         public Brush Color { get; private set; }
 
@@ -76,8 +76,27 @@ namespace Crazy_risk
         public void AsignarTerritorio(Territorio t)
         {
             territorios_Conquistados.Añadir(t.Nombre);
-            t.Conquistador = Nombre; 
-            t.Tropas = 1; 
+            t.Conquistador = Nombre;
+            t.Tropas = 1;
+        }
+
+        public int contarCartasActivas()
+        {
+            int cartasActivas = 0;
+            foreach (var c in cartas)
+            {
+                if (c.Usada == false) cartasActivas += 1;
+            }
+            return cartasActivas;
+        }
+
+        public bool verificarCartaCreada(Territorio t) 
+        { 
+            foreach(var c in cartas) 
+            {
+                if (c.TerritorioAsociado == t.Nombre) return true;
+            }
+            return false;
         }
 
         // Añade la cantidad especificada de tropas disponibles al jugador

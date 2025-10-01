@@ -62,10 +62,6 @@ namespace Crazy_risk
             RepartirTerritorios();
         }
 
-        public void iniciarJuego()
-        {
-            
-        }
 
         //Esta función se encarga de tomar todos los territorios y asignarles un dueño de manera aleatoria
         internal void RepartirTerritorios()
@@ -117,13 +113,115 @@ namespace Crazy_risk
             {
                 return this.listaJugadores.BuscarPorCondición(j => j.Nombre == ganador);
             }
-            return null;
+            else 
+            {
+                if (ObtenerJugadorNoActivo().territorios_Conquistados.size == 0)
+                {
+                    return ObtenerJugadorActual();
+                }
+            }
+
+                return null;
         }
         /*Simula el lanzamiento de un dado, devolviendo un numero entre 1 y 6*/
         public int LanzarDado()
         {
             return generadorAleatorio.Next(1, 7);
         }
+
+        private bool SonAdyacentes(Territorio a, Territorio b)
+        {
+            return a.Adyacentes.Buscar(b.Nombre);
+        }
+
+        public bool PuedeAtacarDesde(Territorio origen)
+        {
+            var j = ObtenerJugadorActual();
+            return origen != null
+                   && origen.Conquistador == j.Nombre
+                   && origen.Tropas >= 2;
+        }
+
+        public bool PuedeAtacarA(Territorio origen, Territorio destino)
+        {
+            var j = ObtenerJugadorActual();
+            return destino != null
+                   && destino.Conquistador != j.Nombre
+                   && SonAdyacentes(origen, destino);
+        }
+
+        private static void OrdenarDesc(List<int> v) => v.Sort((x, y) => y.CompareTo(x));
+
+        private (int perdidasAtq, int perdidasDef, List<int> tiradaAtq, List<int> tiradaDef)
+        ResolverTirada(int dadosAtq, int dadosDef)
+        {
+            var tiradaAtq = new List<int>(dadosAtq);
+            var tiradaDef = new List<int>(dadosDef);
+            for (int i = 0; i < dadosAtq; i++) tiradaAtq.Add(LanzarDado());
+            for (int i = 0; i < dadosDef; i++) tiradaDef.Add(LanzarDado());
+            OrdenarDesc(tiradaAtq);
+            OrdenarDesc(tiradaDef);
+
+            int comps = Math.Min(tiradaAtq.Count, tiradaDef.Count);
+            int perdAtq = 0, perdDef = 0;
+            for (int i = 0; i < comps; i++)
+            {
+                if (tiradaAtq[i] > tiradaDef[i]) perdDef++;
+                else perdAtq++;
+            }
+            return (perdAtq, perdDef, tiradaAtq, tiradaDef);
+        }
+
+        public (string resumen, bool conquistado) AtacarUnaVez()
+        {
+            if (origenSeleccionado == null || destinoSeleccionado == null)
+                return ("Selecciona origen (tuyo) y destino (enemigo adyacente).", false);
+
+            if (!PuedeAtacarDesde(origenSeleccionado))
+                return ($"No puedes atacar desde {origenSeleccionado.Nombre}: requiere ≥2 tropas y ser tuyo.", false);
+            if (!PuedeAtacarA(origenSeleccionado, destinoSeleccionado))
+                return ($"{destinoSeleccionado.Nombre} no es enemigo adyacente a {origenSeleccionado.Nombre}.", false);
+
+            int dadosAtq = Math.Min(3, origenSeleccionado.Tropas - 1);
+            int dadosDef = Math.Min(2, destinoSeleccionado.Tropas);
+            if (dadosAtq <= 0 || dadosDef <= 0)
+                return ("No hay dados válidos para atacar o defender.", false);
+
+            var (perdAtq, perdDef, tirAtq, tirDef) = ResolverTirada(dadosAtq, dadosDef);
+
+            origenSeleccionado.Tropas -= perdAtq;
+            destinoSeleccionado.Tropas -= perdDef;
+
+            bool conquista = destinoSeleccionado.Tropas == 0;
+            if (conquista)
+            {
+                int aMover = Math.Min(dadosAtq, origenSeleccionado.Tropas - 1);
+                if (aMover < 1) aMover = 1;
+
+                string defensorPrevio = destinoSeleccionado.Conquistador;
+                var atacante = ObtenerJugadorActual();
+                var defensor = listaJugadores.BuscarPorCondición(j => j.Nombre == defensorPrevio);
+                GenerarCarta(destinoSeleccionado, atacante);
+
+                defensor?.PerderTerritorio(destinoSeleccionado.Nombre);
+                atacante.territorios_Conquistados.Añadir(destinoSeleccionado.Nombre);
+                destinoSeleccionado.Conquistador = atacante.Nombre;
+
+                destinoSeleccionado.Tropas = 0;
+                origenSeleccionado.Tropas -= aMover;
+                destinoSeleccionado.Tropas += aMover;
+
+
+            }
+
+            string resumen = $"Atq [{string.Join(",", tirAtq)}] vs Def [{string.Join(",", tirDef)}]  " +
+                             $"=> pérdidas Atacante:{perdAtq} Defensor:{perdDef}" +
+                             (conquista ? $"  | ¡Conquistado {destinoSeleccionado.Nombre}!" : "");
+            deseleccionarTerritorios();
+            cancelarTrasnferencia();
+            return (resumen, conquista);
+        }
+
 
         /*Cambia el turno al siguiente jugador*/
         public void cambiarTurno()
@@ -135,6 +233,11 @@ namespace Crazy_risk
         public Jugador ObtenerJugadorActual() 
         {
          return listaJugadores.ObtenerEnIndice(jugadorActivo);
+        }
+
+        public Jugador ObtenerJugadorNoActivo()
+        {
+            return listaJugadores.ObtenerEnIndice((jugadorActivo + 1) % 2);
         }
 
         /* Añade una tropa al territorio especificado, siempre y cuando el territorio pertenezca al jugador actual
@@ -181,16 +284,26 @@ namespace Crazy_risk
                 Jugador jugador = ObtenerJugadorActual();
                 jugador.Fase++;
 
-                if (jugador.Fase == 3) deseleccionarTerritorios();
+                if (jugador.Fase == 3 || jugador.Fase == 2) 
+                {
+                    deseleccionarTerritorios();
+                    cancelarTrasnferencia();
+                }
+
                 if (jugador.Fase > 3)
                 {
-                    if (origenSeleccionado != null || destinoSeleccionado != null) 
+                    if (origenSeleccionado != null)
                     {
                         origenSeleccionado.EstaSeleccionado = false;
-                        destinoSeleccionado.EstaSeleccionado = false;
                         origenSeleccionado = null!;
+                    }
+                    if (destinoSeleccionado != null)
+                    {
+
+                        destinoSeleccionado.EstaSeleccionado = false;
                         destinoSeleccionado = null!;
                     }
+                        
 
                     jugador.Fase = 1;
                     if (jugadorActivo == 1)
@@ -402,41 +515,124 @@ namespace Crazy_risk
             }
             
         }
-        
+
+
+        /* Verifica si es posible transferir la cantidad de tropas especificada desde el territorio origen al territorio destino
+         * La transferencia es posible siempre y cuando el territorio origen tenga más tropas que la cantidad especificada
+         */
         internal bool verificarTransferenciaPosible(int cantidad) 
         {
-            return (origenSeleccionado.Tropas > cantidad);
+            return origenSeleccionado != null
+            && cantidad >= 1
+            && cantidad < origenSeleccionado.Tropas;
         }
+
+        /* Cancela la transferencia de tropas, deseleccionando ambos territorios y asignando null a las variables
+         * que almacenan los territorios seleccionados
+         */
         internal void cancelarTrasnferencia() 
-        {
-            destinoSeleccionado.EstaSeleccionado = false;
+        {   
+            if (destinoSeleccionado != null)
+                destinoSeleccionado.EstaSeleccionado = false;
             destinoSeleccionado = null;
-            origenSeleccionado.EstaSeleccionado = false;
+            if (origenSeleccionado != null)
+                origenSeleccionado.EstaSeleccionado = false;
             origenSeleccionado = null;
         }
 
+        /* Verifica que el territorio origen seleccionado tenga más de una tropa
+         * para poder realizar la transferencia
+         */
         public bool verificarOrigenValido() 
         {
-            return (origenSeleccionado.Tropas>1);
+                        return origenSeleccionado != null && origenSeleccionado.Tropas >= 2;
         }
 
         /* Transfiere la cantidad de tropas especificada desde el territorio origen al territorio destino
          * siempre y cuando ambos territorios hayan sido seleccionados y la transferencia sea posible
          */
-        public void TransferenciaTropas(int cantidad)
+        public bool TransferenciaTropas(int cantidad)
         {
             if (origenSeleccionado != null && destinoSeleccionado != null)
             {
-                if (verificarTransferenciaPosible(cantidad))
+                if (verificarTransferenciaPosible(cantidad) && verificarConexionEntreTerritorios())
                 {
-                    int tropasParaTransferir = origenSeleccionado.Tropas - cantidad;
-                    origenSeleccionado.Tropas -= tropasParaTransferir;
-                    destinoSeleccionado.Tropas += tropasParaTransferir;
+                    origenSeleccionado.Tropas -= cantidad;
+                    destinoSeleccionado.Tropas += cantidad;
+                    cancelarTrasnferencia();
+                    return true;
                 }
                 cancelarTrasnferencia();
             }
+            return false;
 
         }
+
+        /* Asigna el territorio destino seleccionado para un ataque, siempre y cuando el territorio origen
+         * haya sido seleccionado y el territorio destino sea adyacente al origen y pertenezca a un jugador enemigo
+         */
+        public bool AsignarDestinoAtaque(Territorio t)
+        {
+            if (origenSeleccionado == null) return false;
+
+            if (!PuedeAtacarA(origenSeleccionado, t)) return false;
+
+            if (destinoSeleccionado != null)
+                destinoSeleccionado.EstaSeleccionado = false;
+
+            t.EstaSeleccionado = true;
+            destinoSeleccionado = t;
+            return true;
+        }
+
+        public void GenerarCarta(Territorio t, Jugador jugador) 
+        {
+            if (jugador.contarCartasActivas()<6 && !jugador.verificarCartaCreada(t)) 
+            {
+                int t1po = generadorAleatorio.Next(0, 3);
+                TipoCarta tipoCarta = (TipoCarta)t1po;
+                jugador.AgregarCarta(new Carta(tipoCarta, t.Nombre));
+            }
+
+        }
+
+        public bool verificarConexionEntreTerritorios()
+        {
+            if (origenSeleccionado.Conquistador != destinoSeleccionado.Conquistador)
+                return false;
+            else
+            {
+                ListaEnlazada<string> visitados = new ListaEnlazada<string>();
+                return vericarConexionRecursiva(origenSeleccionado, destinoSeleccionado, origenSeleccionado.Conquistador, visitados);
+            }
+
+
+        }
+
+        /* Verifica de manera recursiva si existe una conexión entre dos territorios a través de territorios adyacentes
+         * que pertenezcan al mismo dueño
+         */
+        private bool vericarConexionRecursiva(Territorio actual, Territorio destino, string dueño, ListaEnlazada<string> visitados)
+        {
+            if (actual.Nombre == destino.Nombre)
+                return true;
+
+            visitados.Añadir(actual.Nombre);
+
+            foreach (var nombreAdj in actual.Adyacentes.Enumerar())
+            {
+                Territorio adj = listaTerritorios.BuscarPorCondición(j=>j.Nombre==nombreAdj);
+                if (adj == null) continue;
+
+                if (adj.Conquistador == dueño && !visitados.Buscar(adj.Nombre))
+                {
+                    if (vericarConexionRecursiva(adj, destino, dueño, visitados))
+                        return true;
+                }
+            }
+            return false;
+        }
+
 
     }
 }

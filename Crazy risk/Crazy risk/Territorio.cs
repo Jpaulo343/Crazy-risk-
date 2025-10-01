@@ -26,7 +26,9 @@ namespace Crazy_risk
                 if (conquistador != value)
                 {
                     conquistador = value;
-                    color=DiccionarioColor_Nombre.obtener(Conquistador);
+                    color=DiccionarioColor_Nombre.obtener(value);
+
+                    OnPropertyChanged(nameof(color));
                     OnPropertyChanged();
                 }
             }
@@ -41,7 +43,7 @@ namespace Crazy_risk
                 if (_color != value)
                 {
                     _color = value;
-                    OnPropertyChanged(nameof(_color));
+                    OnPropertyChanged(nameof(color));
                 }
             }
         }
