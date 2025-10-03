@@ -19,12 +19,12 @@ namespace Crazy_risk
         public int contadorFibonacciCartas { get; private set; }
         public Random generadorAleatorio { get; private set; }
         public bool rondaInicial { get; private set; }
-        public int jugadorActivo { get; private set; } //Puede ser 0 o 1, es el indice de la lista "jugadores"
+        public int jugadorActivo { get; private set; } 
 
-        public Territorio origenSeleccionado { get; private set; }
-        public Territorio destinoSeleccionado { get; private set; }
+        public Territorio? origenSeleccionado { get; private set; }
+        public Territorio? destinoSeleccionado { get; private set; }
 
-        //Constructor del juego, recibe los nombres de los dos jugadores
+
         public Juego(string NombreJugador1,string NombreJugador2)
         {
             ListaEnlazada<Brush> colores = new ListaEnlazada<Brush>();
@@ -46,10 +46,12 @@ namespace Crazy_risk
             Jugador jugador3 = new Jugador("Neutral", DiccionarioColor_Nombre.obtener("Neutral"), 1, territorios3, 26);
 
             ListaEnlazada<Jugador> jugadores = new ListaEnlazada<Jugador>();
-            //El orden de inserción es importante, ya que el jugador en el indice 0 será el primero en jugar
+
             jugadores.Añadir(jugador3);
             jugadores.Añadir(jugador2);
             jugadores.Añadir(jugador1);
+
+            this.jugadorActivo = 0;
 
             this.listaTerritorios = cargarDatosTerritorios();
             this.listaJugadores = jugadores;
@@ -104,6 +106,21 @@ namespace Crazy_risk
             return territorios;
         }
 
+        // Permite fijar la bandera de ronda inicial desde fuera (p.ej. al aplicar un snapshot)
+        public void ForzarRondaInicial(bool valor)
+        {
+            // Si es una propiedad con private set:
+            // this.rondaInicial = valor;
+
+            // Si rondaInicial es un campo privado, igual funciona:
+            rondaInicial = valor;
+        }
+        public void ForzarTurnoPorNombre(string nombre)
+        {
+            if (listaJugadores.ObtenerEnIndice(0).Nombre == nombre) jugadorActivo = 0;
+            else if (listaJugadores.ObtenerEnIndice(1).Nombre == nombre) jugadorActivo = 1;
+            else jugadorActivo = 0; // fallback sensato
+        }
 
         /*Verifica si hay un ganador, en caso de que lo haya devuelve el objeto jugador correspondiente, si no retorna null*/
         public Jugador VerificarVictoria()
@@ -150,6 +167,69 @@ namespace Crazy_risk
                    && SonAdyacentes(origen, destino);
         }
 
+<<<<<<< Updated upstream
+        // Sustituye la versión que recibía List<int>
+        // private static void OrdenarDesc(List<int> v) => v.Sort((x, y) => y.CompareTo(x));
+
+        private static ListaEnlazada<int> OrdenarDesc(ListaEnlazada<int> lista)
+        {
+            // selection sort usando solo ListaEnlazada<T>
+            // 1) clonar lista de trabajo
+            ListaEnlazada<int> trabajo = new ListaEnlazada<int>();
+            foreach (var v in lista.Enumerar()) trabajo.Añadir(v); // Añadir al head -> orden inverso, pero no importa
+
+            // 2) construir 'ascPorMax' extrayendo cada máximo
+            ListaEnlazada<int> ascPorMax = new ListaEnlazada<int>();
+            while (trabajo.size > 0)
+            {
+                // buscar el máximo
+                int max = int.MinValue;
+                foreach (var v in trabajo.Enumerar())
+                    if (v > max) max = v;
+
+                // eliminar una ocurrencia del máximo y añadirla a ascPorMax (al head)
+                trabajo.Eliminar(max);
+                ascPorMax.Añadir(max); // acumula en orden ascendente
+            }
+
+            // 3) invertir para quedar descendente
+            ListaEnlazada<int> desc = new ListaEnlazada<int>();
+            foreach (var v in ascPorMax.Enumerar())
+                desc.Añadir(v); // Añadir al head invierte
+
+            return desc;
+        }
+
+        // Antes:
+        // private (int perdidasAtq, int perdidasDef, List<int> tiradaAtq, List<int> tiradaDef) ResolverTirada(int dadosAtq, int dadosDef)
+
+        private (int perdidasAtq, int perdidasDef, ListaEnlazada<int> tiradaAtq, ListaEnlazada<int> tiradaDef)
+        ResolverTirada(int dadosAtq, int dadosDef)
+        {
+            var tiradaAtq = new ListaEnlazada<int>();
+            var tiradaDef = new ListaEnlazada<int>();
+
+            // Llenar tiradas (solo ListaEnlazada)
+            for (int i = 0; i < dadosAtq; i++) tiradaAtq.Añadir(LanzarDado());
+            for (int i = 0; i < dadosDef; i++) tiradaDef.Añadir(LanzarDado());
+
+            // Ordenar descendente
+            tiradaAtq = OrdenarDesc(tiradaAtq);
+            tiradaDef = OrdenarDesc(tiradaDef);
+
+            int comps = Math.Min(tiradaAtq.size, tiradaDef.size);
+            int perdAtq = 0, perdDef = 0;
+
+            // Comparar usando ObtenerEnIndice (tu lista lo expone)
+            for (int i = 0; i < comps; i++)
+            {
+                int a = tiradaAtq.ObtenerEnIndice(i);
+                int d = tiradaDef.ObtenerEnIndice(i);
+                if (a > d) perdDef++;
+                else perdAtq++;
+            }
+
+=======
         private static void OrdenarDesc(List<int> v) => v.Sort((x, y) => y.CompareTo(x));
 
         private (int perdidasAtq, int perdidasDef, List<int> tiradaAtq, List<int> tiradaDef)
@@ -169,6 +249,7 @@ namespace Crazy_risk
                 if (tiradaAtq[i] > tiradaDef[i]) perdDef++;
                 else perdAtq++;
             }
+>>>>>>> Stashed changes
             return (perdAtq, perdDef, tiradaAtq, tiradaDef);
         }
 
@@ -201,7 +282,10 @@ namespace Crazy_risk
                 string defensorPrevio = destinoSeleccionado.Conquistador;
                 var atacante = ObtenerJugadorActual();
                 var defensor = listaJugadores.BuscarPorCondición(j => j.Nombre == defensorPrevio);
+<<<<<<< Updated upstream
                 GenerarCarta(destinoSeleccionado, atacante);
+=======
+>>>>>>> Stashed changes
 
                 defensor?.PerderTerritorio(destinoSeleccionado.Nombre);
                 atacante.territorios_Conquistados.Añadir(destinoSeleccionado.Nombre);
@@ -211,18 +295,30 @@ namespace Crazy_risk
                 origenSeleccionado.Tropas -= aMover;
                 destinoSeleccionado.Tropas += aMover;
 
+<<<<<<< Updated upstream
 
             }
 
-            string resumen = $"Atq [{string.Join(",", tirAtq)}] vs Def [{string.Join(",", tirDef)}]  " +
+            string resumen = $"Atq [{string.Join(",", tirAtq.Enumerar())}] vs Def [{string.Join(",", tirDef.Enumerar())}]  " +
                              $"=> pérdidas Atacante:{perdAtq} Defensor:{perdDef}" +
                              (conquista ? $"  | ¡Conquistado {destinoSeleccionado.Nombre}!" : "");
+
             deseleccionarTerritorios();
             cancelarTrasnferencia();
             return (resumen, conquista);
         }
 
 
+=======
+            }
+
+            string resumen = $"Atq [{string.Join(",", tirAtq)}] vs Def [{string.Join(",", tirDef)}]  " +
+                             $"=> pérdidas A:{perdAtq} D:{perdDef}" +
+                             (conquista ? $"  | ¡Conquistado {destinoSeleccionado.Nombre}!" : "");
+            return (resumen, conquista);
+        }
+
+>>>>>>> Stashed changes
         /*Cambia el turno al siguiente jugador*/
         public void cambiarTurno()
         {
@@ -252,7 +348,6 @@ namespace Crazy_risk
                 territorio.AgregarTropas(1);
                 jugador.TropasDisponibles--;
 
-                // Si ya no tiene tropas, pasa turno
                 if (jugador.TropasDisponibles == 0 && rondaInicial)
                 {
 
@@ -295,6 +390,7 @@ namespace Crazy_risk
                     if (origenSeleccionado != null)
                     {
                         origenSeleccionado.EstaSeleccionado = false;
+<<<<<<< Updated upstream
                         origenSeleccionado = null!;
                     }
                     if (destinoSeleccionado != null)
@@ -302,13 +398,18 @@ namespace Crazy_risk
 
                         destinoSeleccionado.EstaSeleccionado = false;
                         destinoSeleccionado = null!;
+=======
+                        destinoSeleccionado.EstaSeleccionado = false;
+                        origenSeleccionado = null;
+                        destinoSeleccionado = null;
+>>>>>>> Stashed changes
                     }
                         
 
                     jugador.Fase = 1;
                     if (jugadorActivo == 1)
                     {
-                        calcularTropasRefuerzo(listaJugadores.ObtenerEnIndice(2)); //el bot recibe tropas de refuerzo y las reparte entre sus territorios
+                        calcularTropasRefuerzo(listaJugadores.ObtenerEnIndice(2)); 
                         repartirtropasBot();
                     }
                     cambiarTurno();
@@ -426,7 +527,6 @@ namespace Crazy_risk
         }
 
 
-        //Calcula el numero en x posición en la suceccion de fibonacci
         private int calcularPosiciónFibonacci()
         {
             int val1 = 1;
@@ -448,7 +548,6 @@ namespace Crazy_risk
         }
 
 
-        //Reparte las tropas del bot de manera aleatoria entre sus territorios conquistados
         public void repartirtropasBot()
         {
             Jugador bot = listaJugadores.ObtenerEnIndice(2);
@@ -523,6 +622,7 @@ namespace Crazy_risk
         internal bool verificarTransferenciaPosible(int cantidad) 
         {
             return origenSeleccionado != null
+<<<<<<< Updated upstream
             && cantidad >= 1
             && cantidad < origenSeleccionado.Tropas;
         }
@@ -538,14 +638,32 @@ namespace Crazy_risk
             if (origenSeleccionado != null)
                 origenSeleccionado.EstaSeleccionado = false;
             origenSeleccionado = null;
+=======
+                && cantidad >= 1
+                && cantidad < origenSeleccionado.Tropas; 
+>>>>>>> Stashed changes
         }
+         internal void cancelarTrasnferencia()
+         {
+             if (destinoSeleccionado != null)
+                 destinoSeleccionado.EstaSeleccionado = false;
+             destinoSeleccionado = null;
+
+             if (origenSeleccionado != null)
+                 origenSeleccionado.EstaSeleccionado = false;
+             origenSeleccionado = null;
+         }
 
         /* Verifica que el territorio origen seleccionado tenga más de una tropa
          * para poder realizar la transferencia
          */
         public bool verificarOrigenValido() 
         {
+<<<<<<< Updated upstream
                         return origenSeleccionado != null && origenSeleccionado.Tropas >= 2;
+=======
+            return origenSeleccionado != null && origenSeleccionado.Tropas >= 2;
+>>>>>>> Stashed changes
         }
 
         /* Transfiere la cantidad de tropas especificada desde el territorio origen al territorio destino
@@ -594,6 +712,19 @@ namespace Crazy_risk
                 jugador.AgregarCarta(new Carta(tipoCarta, t.Nombre));
             }
 
+        }
+        public bool AsignarDestinoAtaque(Territorio t)
+        {
+            if (origenSeleccionado == null) return false;
+
+            if (!PuedeAtacarA(origenSeleccionado, t)) return false;
+
+            if (destinoSeleccionado != null)
+                destinoSeleccionado.EstaSeleccionado = false;
+
+            t.EstaSeleccionado = true;
+            destinoSeleccionado = t;
+            return true;
         }
 
         public bool verificarConexionEntreTerritorios()

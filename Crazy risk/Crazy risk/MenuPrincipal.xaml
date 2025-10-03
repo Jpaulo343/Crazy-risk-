@@ -5,7 +5,7 @@
 
     <Grid>
         <!-- Imagen de fondo que mantiene proporciones -->
-        <Image Source="Imagenes/imagenesondo.png"
+        <Image Source="Imagenes/Imagenefondo.png"
            Stretch="UniformToFill"
            Panel.ZIndex="-1"/>
 

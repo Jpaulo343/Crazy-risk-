@@ -115,7 +115,7 @@ namespace Crazy_risk
 
         public bool verificarTerritorio(Territorio t) 
         {
-            return territorios_Conquistados.Buscar(t.Nombre);
+            return t != null && t.Conquistador == this.Nombre;
         }
 
     }
