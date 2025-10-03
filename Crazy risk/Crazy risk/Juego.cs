@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows.Media;
-
 
 namespace Crazy_risk
 {
@@ -19,13 +15,12 @@ namespace Crazy_risk
         public int contadorFibonacciCartas { get; private set; }
         public Random generadorAleatorio { get; private set; }
         public bool rondaInicial { get; private set; }
-        public int jugadorActivo { get; private set; } 
+        public int jugadorActivo { get; private set; }
 
         public Territorio? origenSeleccionado { get; private set; }
         public Territorio? destinoSeleccionado { get; private set; }
 
-
-        public Juego(string NombreJugador1,string NombreJugador2)
+        public Juego(string NombreJugador1, string NombreJugador2)
         {
             ListaEnlazada<Brush> colores = new ListaEnlazada<Brush>();
             colores.Añadir(Brushes.LightSalmon);
@@ -46,7 +41,6 @@ namespace Crazy_risk
             Jugador jugador3 = new Jugador("Neutral", DiccionarioColor_Nombre.obtener("Neutral"), 1, territorios3, 26);
 
             ListaEnlazada<Jugador> jugadores = new ListaEnlazada<Jugador>();
-
             jugadores.Añadir(jugador3);
             jugadores.Añadir(jugador2);
             jugadores.Añadir(jugador1);
@@ -56,73 +50,52 @@ namespace Crazy_risk
             this.listaTerritorios = cargarDatosTerritorios();
             this.listaJugadores = jugadores;
             this.contadorFibonacciCartas = 1;
-            this.jugadorActivo = 0;
-            Random generadorAleatorio = new Random();
-            this.generadorAleatorio = generadorAleatorio;
+            this.generadorAleatorio = new Random();
             rondaInicial = true;
 
             RepartirTerritorios();
         }
 
-
-        //Esta función se encarga de tomar todos los territorios y asignarles un dueño de manera aleatoria
         internal void RepartirTerritorios()
         {
             int indiceJugador = 0;
             ListaTerritorios territoriosDisponibles = listaTerritorios.CopiarLista();
             while (territoriosDisponibles.size > 0)
             {
-
                 Territorio territorio = territoriosDisponibles.Seleccionar_Y_Eliminar_Random();
-
                 Jugador jugador = listaJugadores.ObtenerEnIndice(indiceJugador);
-
                 jugador.AsignarTerritorio(territorio);
-
                 indiceJugador = (indiceJugador + 1) % listaJugadores.size;
             }
         }
-        /*Carga los datos de los territorios desde un archivo JSON y crea la lista de territorios del juego*/   
+
         internal ListaTerritorios cargarDatosTerritorios()
         {
             string json = File.ReadAllText("DatosTerritorios.json");
             var territoriosJson = JsonSerializer.Deserialize<List<TerritorioJson>>(json);
-
             ListaTerritorios territorios = new();
 
             foreach (var t in territoriosJson)
             {
                 var listaAdyacentes = new ListaEnlazada<string>();
                 foreach (var nombreAdj in t.Adyacentes)
-                {
                     listaAdyacentes.Añadir(nombreAdj);
-                }
-                Console.WriteLine(t.Nombre);
+
                 Territorio territorio = new Territorio(t.Nombre, t.Estado, listaAdyacentes, t.Tropas, t.Continente);
                 territorios.Añadir(territorio);
             }
-
-            
             return territorios;
         }
 
-        // Permite fijar la bandera de ronda inicial desde fuera (p.ej. al aplicar un snapshot)
-        public void ForzarRondaInicial(bool valor)
-        {
-            // Si es una propiedad con private set:
-            // this.rondaInicial = valor;
+        public void ForzarRondaInicial(bool valor) => rondaInicial = valor;
 
-            // Si rondaInicial es un campo privado, igual funciona:
-            rondaInicial = valor;
-        }
         public void ForzarTurnoPorNombre(string nombre)
         {
             if (listaJugadores.ObtenerEnIndice(0).Nombre == nombre) jugadorActivo = 0;
             else if (listaJugadores.ObtenerEnIndice(1).Nombre == nombre) jugadorActivo = 1;
-            else jugadorActivo = 0; // fallback sensato
+            else jugadorActivo = 0;
         }
 
-        /*Verifica si hay un ganador, en caso de que lo haya devuelve el objeto jugador correspondiente, si no retorna null*/
         public Jugador VerificarVictoria()
         {
             string ganador = listaTerritorios.VerificarVictoria();
@@ -130,78 +103,55 @@ namespace Crazy_risk
             {
                 return this.listaJugadores.BuscarPorCondición(j => j.Nombre == ganador);
             }
-            else 
+            else
             {
                 if (ObtenerJugadorNoActivo().territorios_Conquistados.size == 0)
                 {
                     return ObtenerJugadorActual();
                 }
             }
-
-                return null;
-        }
-        /*Simula el lanzamiento de un dado, devolviendo un numero entre 1 y 6*/
-        public int LanzarDado()
-        {
-            return generadorAleatorio.Next(1, 7);
+            return null;
         }
 
-        private bool SonAdyacentes(Territorio a, Territorio b)
-        {
-            return a.Adyacentes.Buscar(b.Nombre);
-        }
+        public int LanzarDado() => generadorAleatorio.Next(1, 7);
+
+        private bool SonAdyacentes(Territorio a, Territorio b) => a.Adyacentes.Buscar(b.Nombre);
 
         public bool PuedeAtacarDesde(Territorio origen)
         {
             var j = ObtenerJugadorActual();
-            return origen != null
-                   && origen.Conquistador == j.Nombre
-                   && origen.Tropas >= 2;
+            return origen != null && origen.Conquistador == j.Nombre && origen.Tropas >= 2;
         }
 
         public bool PuedeAtacarA(Territorio origen, Territorio destino)
         {
             var j = ObtenerJugadorActual();
-            return destino != null
-                   && destino.Conquistador != j.Nombre
-                   && SonAdyacentes(origen, destino);
+            return destino != null && destino.Conquistador != j.Nombre && SonAdyacentes(origen, destino);
         }
 
-<<<<<<< Updated upstream
-        // Sustituye la versión que recibía List<int>
-        // private static void OrdenarDesc(List<int> v) => v.Sort((x, y) => y.CompareTo(x));
-
+        // Ordena de forma descendente usando solo ListaEnlazada<int>
         private static ListaEnlazada<int> OrdenarDesc(ListaEnlazada<int> lista)
         {
-            // selection sort usando solo ListaEnlazada<T>
-            // 1) clonar lista de trabajo
             ListaEnlazada<int> trabajo = new ListaEnlazada<int>();
-            foreach (var v in lista.Enumerar()) trabajo.Añadir(v); // Añadir al head -> orden inverso, pero no importa
+            foreach (var v in lista.Enumerar()) trabajo.Añadir(v);
 
-            // 2) construir 'ascPorMax' extrayendo cada máximo
             ListaEnlazada<int> ascPorMax = new ListaEnlazada<int>();
             while (trabajo.size > 0)
             {
-                // buscar el máximo
                 int max = int.MinValue;
                 foreach (var v in trabajo.Enumerar())
                     if (v > max) max = v;
 
-                // eliminar una ocurrencia del máximo y añadirla a ascPorMax (al head)
                 trabajo.Eliminar(max);
-                ascPorMax.Añadir(max); // acumula en orden ascendente
+                ascPorMax.Añadir(max);
             }
 
-            // 3) invertir para quedar descendente
             ListaEnlazada<int> desc = new ListaEnlazada<int>();
             foreach (var v in ascPorMax.Enumerar())
-                desc.Añadir(v); // Añadir al head invierte
+                desc.Añadir(v);
 
             return desc;
         }
-
-        // Antes:
-        // private (int perdidasAtq, int perdidasDef, List<int> tiradaAtq, List<int> tiradaDef) ResolverTirada(int dadosAtq, int dadosDef)
 
         private (int perdidasAtq, int perdidasDef, ListaEnlazada<int> tiradaAtq, ListaEnlazada<int> tiradaDef)
         ResolverTirada(int dadosAtq, int dadosDef)
@@ -209,47 +159,21 @@ namespace Crazy_risk
             var tiradaAtq = new ListaEnlazada<int>();
             var tiradaDef = new ListaEnlazada<int>();
 
-            // Llenar tiradas (solo ListaEnlazada)
             for (int i = 0; i < dadosAtq; i++) tiradaAtq.Añadir(LanzarDado());
             for (int i = 0; i < dadosDef; i++) tiradaDef.Añadir(LanzarDado());
 
-            // Ordenar descendente
             tiradaAtq = OrdenarDesc(tiradaAtq);
             tiradaDef = OrdenarDesc(tiradaDef);
 
             int comps = Math.Min(tiradaAtq.size, tiradaDef.size);
             int perdAtq = 0, perdDef = 0;
 
-            // Comparar usando ObtenerEnIndice (tu lista lo expone)
             for (int i = 0; i < comps; i++)
             {
                 int a = tiradaAtq.ObtenerEnIndice(i);
                 int d = tiradaDef.ObtenerEnIndice(i);
-                if (a > d) perdDef++;
-                else perdAtq++;
+                if (a > d) perdDef++; else perdAtq++;
             }
-
-=======
-        private static void OrdenarDesc(List<int> v) => v.Sort((x, y) => y.CompareTo(x));
-
-        private (int perdidasAtq, int perdidasDef, List<int> tiradaAtq, List<int> tiradaDef)
-        ResolverTirada(int dadosAtq, int dadosDef)
-        {
-            var tiradaAtq = new List<int>(dadosAtq);
-            var tiradaDef = new List<int>(dadosDef);
-            for (int i = 0; i < dadosAtq; i++) tiradaAtq.Add(LanzarDado());
-            for (int i = 0; i < dadosDef; i++) tiradaDef.Add(LanzarDado());
-            OrdenarDesc(tiradaAtq);
-            OrdenarDesc(tiradaDef);
-
-            int comps = Math.Min(tiradaAtq.Count, tiradaDef.Count);
-            int perdAtq = 0, perdDef = 0;
-            for (int i = 0; i < comps; i++)
-            {
-                if (tiradaAtq[i] > tiradaDef[i]) perdDef++;
-                else perdAtq++;
-            }
->>>>>>> Stashed changes
             return (perdAtq, perdDef, tiradaAtq, tiradaDef);
         }
 
@@ -282,10 +206,8 @@ namespace Crazy_risk
                 string defensorPrevio = destinoSeleccionado.Conquistador;
                 var atacante = ObtenerJugadorActual();
                 var defensor = listaJugadores.BuscarPorCondición(j => j.Nombre == defensorPrevio);
-<<<<<<< Updated upstream
+
                 GenerarCarta(destinoSeleccionado, atacante);
-=======
->>>>>>> Stashed changes
 
                 defensor?.PerderTerritorio(destinoSeleccionado.Nombre);
                 atacante.territorios_Conquistados.Añadir(destinoSeleccionado.Nombre);
@@ -294,9 +216,6 @@ namespace Crazy_risk
                 destinoSeleccionado.Tropas = 0;
                 origenSeleccionado.Tropas -= aMover;
                 destinoSeleccionado.Tropas += aMover;
-
-<<<<<<< Updated upstream
-
             }
 
             string resumen = $"Atq [{string.Join(",", tirAtq.Enumerar())}] vs Def [{string.Join(",", tirDef.Enumerar())}]  " +
@@ -308,41 +227,15 @@ namespace Crazy_risk
             return (resumen, conquista);
         }
 
+        public void cambiarTurno() => jugadorActivo = (jugadorActivo + 1) % 2;
 
-=======
-            }
+        public Jugador ObtenerJugadorActual() => listaJugadores.ObtenerEnIndice(jugadorActivo);
 
-            string resumen = $"Atq [{string.Join(",", tirAtq)}] vs Def [{string.Join(",", tirDef)}]  " +
-                             $"=> pérdidas A:{perdAtq} D:{perdDef}" +
-                             (conquista ? $"  | ¡Conquistado {destinoSeleccionado.Nombre}!" : "");
-            return (resumen, conquista);
-        }
+        public Jugador ObtenerJugadorNoActivo() => listaJugadores.ObtenerEnIndice((jugadorActivo + 1) % 2);
 
->>>>>>> Stashed changes
-        /*Cambia el turno al siguiente jugador*/
-        public void cambiarTurno()
+        public bool AñadirTropas(Territorio territorio)
         {
-            jugadorActivo = (jugadorActivo + 1) % 2;
-        }
-
-        /*Devuelve el jugador que tiene el turno actual*/
-        public Jugador ObtenerJugadorActual() 
-        {
-         return listaJugadores.ObtenerEnIndice(jugadorActivo);
-        }
-
-        public Jugador ObtenerJugadorNoActivo()
-        {
-            return listaJugadores.ObtenerEnIndice((jugadorActivo + 1) % 2);
-        }
-
-        /* Añade una tropa al territorio especificado, siempre y cuando el territorio pertenezca al jugador actual
-         * y siempre y cuando el jugador tenga tropas disponibles
-         * Si el jugador se queda sin tropas, avanza la fase del juego
-         */
-        public bool AñadirTropas(Territorio territorio) 
-        {
-            Jugador jugador= ObtenerJugadorActual();
+            Jugador jugador = ObtenerJugadorActual();
             if (territorio.Conquistador == jugador.Nombre && jugador.TropasDisponibles > 0)
             {
                 territorio.AgregarTropas(1);
@@ -350,7 +243,6 @@ namespace Crazy_risk
 
                 if (jugador.TropasDisponibles == 0 && rondaInicial)
                 {
-
                     AvanzarFase();
                     return true;
                 }
@@ -358,12 +250,8 @@ namespace Crazy_risk
             return false;
         }
 
-        /*Avanza la fase del jugador actual, y en caso de que haya terminado su turno, cambia al siguiente jugador
-         * Si es el primer turno del juego, reparte las tropas del bot y calcula las tropas de refuerzo del primer jugador
-         */
-        public void AvanzarFase() 
+        public void AvanzarFase()
         {
-
             if (rondaInicial)
             {
                 if (jugadorActivo == 1)
@@ -374,12 +262,12 @@ namespace Crazy_risk
                 cambiarTurno();
                 calcularTropasRefuerzo(ObtenerJugadorActual());
             }
-            else 
+            else
             {
                 Jugador jugador = ObtenerJugadorActual();
                 jugador.Fase++;
 
-                if (jugador.Fase == 3 || jugador.Fase == 2) 
+                if (jugador.Fase == 3 || jugador.Fase == 2)
                 {
                     deseleccionarTerritorios();
                     cancelarTrasnferencia();
@@ -387,29 +275,15 @@ namespace Crazy_risk
 
                 if (jugador.Fase > 3)
                 {
-                    if (origenSeleccionado != null)
-                    {
-                        origenSeleccionado.EstaSeleccionado = false;
-<<<<<<< Updated upstream
-                        origenSeleccionado = null!;
-                    }
-                    if (destinoSeleccionado != null)
-                    {
-
-                        destinoSeleccionado.EstaSeleccionado = false;
-                        destinoSeleccionado = null!;
-=======
-                        destinoSeleccionado.EstaSeleccionado = false;
-                        origenSeleccionado = null;
-                        destinoSeleccionado = null;
->>>>>>> Stashed changes
-                    }
-                        
+                    if (origenSeleccionado != null) origenSeleccionado.EstaSeleccionado = false;
+                    if (destinoSeleccionado != null) destinoSeleccionado.EstaSeleccionado = false;
+                    origenSeleccionado = null;
+                    destinoSeleccionado = null;
 
                     jugador.Fase = 1;
                     if (jugadorActivo == 1)
                     {
-                        calcularTropasRefuerzo(listaJugadores.ObtenerEnIndice(2)); 
+                        calcularTropasRefuerzo(listaJugadores.ObtenerEnIndice(2));
                         repartirtropasBot();
                     }
                     cambiarTurno();
@@ -418,59 +292,41 @@ namespace Crazy_risk
             }
         }
 
-        /*Calcula las tropas de refuerzo que recibe un jugador al inicio de su turno*/
-        private void calcularTropasRefuerzo(Jugador jugador) 
+        private void calcularTropasRefuerzo(Jugador jugador)
         {
             jugador.AgregarTropas((jugador.territorios_Conquistados.size / 3) + CalcularBonusContinentes(jugador));
-
         }
 
-        /*Calcula el bonus de tropas que recibe un jugador por tener el control total de uno o más continentes*/
-        private int CalcularBonusContinentes(Jugador jugador) 
+        private int CalcularBonusContinentes(Jugador jugador)
         {
             int tropasBonus = 0;
-            for (int i = 0; i <= 5; i++) 
+            for (int i = 0; i <= 5; i++)
             {
-
-               if (listaTerritorios.Enumerar().All(t => t.Continente == i && t.Conquistador == jugador.Nombre))
-               {
-                    if (i == 1 || i == 5)
-                    {
-                        tropasBonus += 2;
-                    }
-                    else if (i == 0 || i == 3)
-                    {
-                        tropasBonus += 3;
-                    }
-                    else 
-                    {
-                        tropasBonus += 3 + i;
-                    }
-               }
-                    break;
+                if (listaTerritorios.Enumerar().All(t => t.Continente == i && t.Conquistador == jugador.Nombre))
+                {
+                    if (i == 1 || i == 5) tropasBonus += 2;
+                    else if (i == 0 || i == 3) tropasBonus += 3;
+                    else tropasBonus += 3 + i;
+                }
+                break;
             }
             return tropasBonus;
         }
-
-
 
         public void selecionarTerritorio(Territorio territorio)
         {
             territorio!.EstaSeleccionado = !territorio.EstaSeleccionado;
         }
 
-        /*Cambia el estado de todos los territorios a no seleccionados*/
-        public void deseleccionarTerritorios() 
+        public void deseleccionarTerritorios()
         {
-        foreach (var territorio in listaTerritorios.Enumerar())
+            foreach (var territorio in listaTerritorios.Enumerar())
             {
-                if (territorio != destinoSeleccionado) 
+                if (territorio != destinoSeleccionado)
                     territorio.EstaSeleccionado = false;
             }
         }
 
-        /*Permite seleccionar o deseleccionar una carta, siempre y cuando no se hayan seleccionado ya 3 cartas
-         */
         public void seleccionarCartas(Carta carta)
         {
             int contadorCartasSeleccionadas = 0;
@@ -482,27 +338,19 @@ namespace Crazy_risk
             carta.Seleccionada = !carta.Seleccionada;
         }
 
-        /*Cambia el estado de todas las cartas del jugador actual a no seleccionadas
-         */
         public void deseleccionarCartas()
         {
             foreach (var carta in ObtenerJugadorActual().Cartas)
-            {
                 carta.Seleccionada = false;
-            }
         }
 
-
-        /*Verifica que la cantidad de cartas seleccionadas sea 3, luego verifica que sean del mismo tipo o de tipos diferntes entre ellos,
-        si cualquiera de las condiciónes se cumple, cambia las 3 cartas por tropas para el jugador*/
         public bool IntercambiarCartas()
         {
             Jugador jugador = ObtenerJugadorActual();
             ListaEnlazada<Carta> cartasACanjear = new ListaEnlazada<Carta>();
             foreach (var carta in jugador.Cartas)
-            {
                 if (carta.Seleccionada) cartasACanjear.Añadir(carta);
-            }
+
             if (cartasACanjear.size == 3)
             {
                 TipoCarta tipo1 = cartasACanjear.Head!.Value.Tipo;
@@ -516,9 +364,7 @@ namespace Crazy_risk
                     jugador.TropasDisponibles += calcularPosiciónFibonacci();
                     deseleccionarCartas();
                     foreach (Carta carta in cartasACanjear.Enumerar())
-                    {
                         jugador.Cartas.Remove(carta);
-                    }
                     IncrementarContadorFibonacciCartas();
                     return true;
                 }
@@ -526,14 +372,10 @@ namespace Crazy_risk
             return false;
         }
 
-
         private int calcularPosiciónFibonacci()
         {
-            int val1 = 1;
-            int val2 = 1;
-            int res;
-
-            for (int i = 0; i < contadorFibonacciCartas; i++) 
+            int val1 = 1, val2 = 1, res;
+            for (int i = 0; i < contadorFibonacciCartas; i++)
             {
                 res = val1 + val2;
                 val1 = val2;
@@ -542,11 +384,7 @@ namespace Crazy_risk
             return val2;
         }
 
-        public void IncrementarContadorFibonacciCartas()
-        {
-            contadorFibonacciCartas++;
-        }
-
+        public void IncrementarContadorFibonacciCartas() => contadorFibonacciCartas++;
 
         public void repartirtropasBot()
         {
@@ -567,108 +405,65 @@ namespace Crazy_risk
             }
         }
 
-        /* Asigna el territorio origen seleccionado, siempre y cuando no sea el mismo que el destino
-         * y siempre y cuando el territorio origen pertenezca al jugador actual
-         */
         public void AsignarOrigenSeleccionado(Territorio t)
         {
             if (destinoSeleccionado == t) return;
-            if (origenSeleccionado==t)
+            if (origenSeleccionado == t)
             {
                 t.EstaSeleccionado = false;
-                origenSeleccionado= null!;
+                origenSeleccionado = null;
                 return;
             }
             Jugador jugadoractual = ObtenerJugadorActual();
             if (jugadoractual.verificarTerritorio(t))
             {
-                if (origenSeleccionado != null)
-                    origenSeleccionado.EstaSeleccionado = false;
+                if (origenSeleccionado != null) origenSeleccionado.EstaSeleccionado = false;
                 t.EstaSeleccionado = true;
                 origenSeleccionado = t;
                 Debug.WriteLine("Origen seleccionado: " + origenSeleccionado.Nombre);
             }
-         
-
         }
-        /* Asigna el territorio destino seleccionado, siempre y cuando no sea el mismo que el origen
-         * y siempre y cuando el territorio destino pertenezca al jugador actual
-         */
+
         public void AsignarDestinoSeleccionado(Territorio t)
         {
-            if (t==origenSeleccionado) return;
+            if (t == origenSeleccionado) return;
             if (destinoSeleccionado == t)
             {
                 t.EstaSeleccionado = false;
-                destinoSeleccionado = null!;
+                destinoSeleccionado = null;
                 return;
             }
             Jugador jugadoractual = ObtenerJugadorActual();
             if (jugadoractual.verificarTerritorio(t))
             {
-                if (destinoSeleccionado != null)
-                    destinoSeleccionado.EstaSeleccionado = false;
+                if (destinoSeleccionado != null) destinoSeleccionado.EstaSeleccionado = false;
                 t.EstaSeleccionado = true;
                 destinoSeleccionado = t;
                 Debug.WriteLine("Destino seleccionado: " + destinoSeleccionado.Nombre);
             }
-            
         }
 
-
-        /* Verifica si es posible transferir la cantidad de tropas especificada desde el territorio origen al territorio destino
-         * La transferencia es posible siempre y cuando el territorio origen tenga más tropas que la cantidad especificada
-         */
-        internal bool verificarTransferenciaPosible(int cantidad) 
+        internal bool verificarTransferenciaPosible(int cantidad)
         {
             return origenSeleccionado != null
-<<<<<<< Updated upstream
-            && cantidad >= 1
-            && cantidad < origenSeleccionado.Tropas;
-        }
-
-        /* Cancela la transferencia de tropas, deseleccionando ambos territorios y asignando null a las variables
-         * que almacenan los territorios seleccionados
-         */
-        internal void cancelarTrasnferencia() 
-        {   
-            if (destinoSeleccionado != null)
-                destinoSeleccionado.EstaSeleccionado = false;
-            destinoSeleccionado = null;
-            if (origenSeleccionado != null)
-                origenSeleccionado.EstaSeleccionado = false;
-            origenSeleccionado = null;
-=======
                 && cantidad >= 1
-                && cantidad < origenSeleccionado.Tropas; 
->>>>>>> Stashed changes
+                && cantidad < origenSeleccionado.Tropas;
         }
-         internal void cancelarTrasnferencia()
-         {
-             if (destinoSeleccionado != null)
-                 destinoSeleccionado.EstaSeleccionado = false;
-             destinoSeleccionado = null;
 
-             if (origenSeleccionado != null)
-                 origenSeleccionado.EstaSeleccionado = false;
-             origenSeleccionado = null;
-         }
-
-        /* Verifica que el territorio origen seleccionado tenga más de una tropa
-         * para poder realizar la transferencia
-         */
-        public bool verificarOrigenValido() 
+        internal void cancelarTrasnferencia()
         {
-<<<<<<< Updated upstream
-                        return origenSeleccionado != null && origenSeleccionado.Tropas >= 2;
-=======
-            return origenSeleccionado != null && origenSeleccionado.Tropas >= 2;
->>>>>>> Stashed changes
+            if (destinoSeleccionado != null) destinoSeleccionado.EstaSeleccionado = false;
+            destinoSeleccionado = null;
+
+            if (origenSeleccionado != null) origenSeleccionado.EstaSeleccionado = false;
+            origenSeleccionado = null;
         }
 
-        /* Transfiere la cantidad de tropas especificada desde el territorio origen al territorio destino
-         * siempre y cuando ambos territorios hayan sido seleccionados y la transferencia sea posible
-         */
+        public bool verificarOrigenValido()
+        {
+            return origenSeleccionado != null && origenSeleccionado.Tropas >= 2;
+        }
+
         public bool TransferenciaTropas(int cantidad)
         {
             if (origenSeleccionado != null && destinoSeleccionado != null)
@@ -683,87 +478,52 @@ namespace Crazy_risk
                 cancelarTrasnferencia();
             }
             return false;
-
         }
 
-        /* Asigna el territorio destino seleccionado para un ataque, siempre y cuando el territorio origen
-         * haya sido seleccionado y el territorio destino sea adyacente al origen y pertenezca a un jugador enemigo
-         */
         public bool AsignarDestinoAtaque(Territorio t)
         {
             if (origenSeleccionado == null) return false;
-
             if (!PuedeAtacarA(origenSeleccionado, t)) return false;
 
-            if (destinoSeleccionado != null)
-                destinoSeleccionado.EstaSeleccionado = false;
-
+            if (destinoSeleccionado != null) destinoSeleccionado.EstaSeleccionado = false;
             t.EstaSeleccionado = true;
             destinoSeleccionado = t;
             return true;
         }
 
-        public void GenerarCarta(Territorio t, Jugador jugador) 
+        public void GenerarCarta(Territorio t, Jugador jugador)
         {
-            if (jugador.contarCartasActivas()<6 && !jugador.verificarCartaCreada(t)) 
+            if (jugador.contarCartasActivas() < 6 && !jugador.verificarCartaCreada(t))
             {
                 int t1po = generadorAleatorio.Next(0, 3);
                 TipoCarta tipoCarta = (TipoCarta)t1po;
                 jugador.AgregarCarta(new Carta(tipoCarta, t.Nombre));
             }
-
-        }
-        public bool AsignarDestinoAtaque(Territorio t)
-        {
-            if (origenSeleccionado == null) return false;
-
-            if (!PuedeAtacarA(origenSeleccionado, t)) return false;
-
-            if (destinoSeleccionado != null)
-                destinoSeleccionado.EstaSeleccionado = false;
-
-            t.EstaSeleccionado = true;
-            destinoSeleccionado = t;
-            return true;
         }
 
         public bool verificarConexionEntreTerritorios()
         {
             if (origenSeleccionado.Conquistador != destinoSeleccionado.Conquistador)
                 return false;
-            else
-            {
-                ListaEnlazada<string> visitados = new ListaEnlazada<string>();
-                return vericarConexionRecursiva(origenSeleccionado, destinoSeleccionado, origenSeleccionado.Conquistador, visitados);
-            }
 
-
+            ListaEnlazada<string> visitados = new ListaEnlazada<string>();
+            return vericarConexionRecursiva(origenSeleccionado, destinoSeleccionado, origenSeleccionado.Conquistador, visitados);
         }
 
-        /* Verifica de manera recursiva si existe una conexión entre dos territorios a través de territorios adyacentes
-         * que pertenezcan al mismo dueño
-         */
         private bool vericarConexionRecursiva(Territorio actual, Territorio destino, string dueño, ListaEnlazada<string> visitados)
         {
-            if (actual.Nombre == destino.Nombre)
-                return true;
+            if (actual.Nombre == destino.Nombre) return true;
 
             visitados.Añadir(actual.Nombre);
-
             foreach (var nombreAdj in actual.Adyacentes.Enumerar())
             {
-                Territorio adj = listaTerritorios.BuscarPorCondición(j=>j.Nombre==nombreAdj);
+                Territorio adj = listaTerritorios.BuscarPorCondición(j => j.Nombre == nombreAdj);
                 if (adj == null) continue;
 
                 if (adj.Conquistador == dueño && !visitados.Buscar(adj.Nombre))
-                {
-                    if (vericarConexionRecursiva(adj, destino, dueño, visitados))
-                        return true;
-                }
+                    if (vericarConexionRecursiva(adj, destino, dueño, visitados)) return true;
             }
             return false;
         }
-
-
     }
 }
