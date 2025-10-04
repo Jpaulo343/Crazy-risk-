@@ -122,13 +122,14 @@ namespace Crazy_risk
 
         private async Task EnviarEstadoAsync()
         {
-            if (conexion?.EstaConectado == true && soyServidor)
+            if (conexion?.EstaConectado == true)
             {
                 var snap = CrearSnapshot();
                 string json = JsonSerializer.Serialize(snap);
                 await conexion.Enviar("STATE|" + json);
             }
         }
+
 
         private EstadoJuegoDTO CrearSnapshot()
         {
@@ -217,7 +218,9 @@ namespace Crazy_risk
                 {
                     await conexion.Enviar($"PLACE|{territorioClickeado.Nombre}");
                     if (jugadorCambiado) await conexion.Enviar("NEXT");
-                    if (soyServidor) _ = EnviarEstadoAsync();
+                    if (conexion?.EstaConectado == true)
+                        await EnviarEstadoAsync();
+
                 }
                 return;
             }
@@ -268,8 +271,9 @@ namespace Crazy_risk
 
                 verificarFinJuego();
                 actualizarInterfaz();
-                if (conexion?.EstaConectado == true && soyServidor) _ = EnviarEstadoAsync();
-                return;
+                if (conexion?.EstaConectado == true)
+                    _ = EnviarEstadoAsync();
+
             }
 
             // FASE 3: TRANSFERENCIA (elegir origen)
@@ -326,15 +330,39 @@ namespace Crazy_risk
                 actualizarInterfaz();
                 return;
             }
-
+            // FASE 3: TRANSFERENCIA (elegir destino con click derecho)
             if (fase == 3)
             {
-                if (territorioClickeado == juego.origenSeleccionado) return;
-                juego.AsignarDestinoSeleccionado(territorioClickeado!);
+                if (juego.origenSeleccionado == null)
+                {
+                    MessageBox.Show("Primero elige el ORIGEN con click izquierdo (≥2 tropas).");
+                    return;
+                }
+
+                // Evita mismo origen/destino
+                if (territorioClickeado == juego.origenSeleccionado)
+                {
+                    MessageBox.Show("El destino no puede ser el mismo que el origen.");
+                    return;
+                }
+
+                // El destino debe ser tuyo
+                var jugador = juego.ObtenerJugadorActual();
+                if (!jugador.verificarTerritorio(territorioClickeado))
+                {
+                    MessageBox.Show("El destino debe ser un territorio TUYO.");
+                    return;
+                }
+
+                // Marca destino y refresca
+                juego.AsignarDestinoSeleccionado(territorioClickeado);
+                actualizarInterfaz();
+
+                // Abre el popup de transferencia automáticamente
+                BtnTransferir_Click(BtnTransferir, new RoutedEventArgs());
                 return;
             }
         }
-
         private void verificarFinJuego()
         {
             Jugador ganador = juego.VerificarVictoria();
@@ -393,7 +421,7 @@ namespace Crazy_risk
             actualizarTextoGuia();
         }
 
-        private void ConfirmarTransferencia_Click(object sender, RoutedEventArgs e)
+        private async void ConfirmarTransferencia_Click(object sender, RoutedEventArgs e)
         {
             if (!CondiciónParaJugar()) return;
 
@@ -406,6 +434,10 @@ namespace Crazy_risk
                 MessageBox.Show("Se han transferido " + cantidad + " tropas");
                 juego.AvanzarFase();
                 actualizarInterfaz();
+
+                
+                if (conexion?.EstaConectado == true)
+                    await EnviarEstadoAsync();   
             }
             else
             {
@@ -413,6 +445,7 @@ namespace Crazy_risk
             }
             TrasnefirTopasPopup.IsOpen = false;
         }
+
 
         private void CancelarTransferencia_Click(object sender, RoutedEventArgs e)
         {
