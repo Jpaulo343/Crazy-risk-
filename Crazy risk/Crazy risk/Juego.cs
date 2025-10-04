@@ -105,7 +105,7 @@ namespace Crazy_risk
             }
             else
             {
-                if (ObtenerJugadorNoActivo().territorios_Conquistados.size == 0)
+                if (listaJugadores.ObtenerEnIndice(2).territorios_Conquistados.size == 0)
                 {
                     return ObtenerJugadorActual();
                 }
